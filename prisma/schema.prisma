@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  firstName   String?
+  lastName    String?
+  imageUrl    String?
+  clerkUserId String   @unique
+  role        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Student     Student?
+  Teacher     Teacher?
+}
+
+model Student {
+  id            Int            @id @default(autoincrement())
+  userId        Int            @unique
+  grade         String?
+  school        String?
+  board         String?
+  fees          Int?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  teacherId     Int // Removed @unique
+  teacher       Teacher        @relation(fields: [teacherId], references: [userId])
+  user          User           @relation(fields: [userId], references: [id])
+}
+
+model Teacher {
+  id           Int            @id @default(autoincrement())
+  userId       Int            @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Student      Student[]
+  user         User           @relation(fields: [userId], references: [id])
+}
