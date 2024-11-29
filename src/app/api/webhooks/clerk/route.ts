@@ -67,6 +67,7 @@ export async function POST(req: Request) {
             ...(first_name ? { firstName: first_name } : {}),
             ...(last_name ? { lastName: last_name } : {}),
             ...(image_url ? { imageUrl: image_url } : {}),
+            
         };
 
         console.log("User data prepared:", user);
@@ -105,14 +106,14 @@ export async function POST(req: Request) {
             return new Response("User not found for update", { status: 404 });
         }
         
-        const { tempRole } = unsafe_metadata;
+        const { role, grade, school, board, fees, teacher_id } = unsafe_metadata;
 
         const updatedUserData = {
             email: email_addresses[0].email_address,
             ...(first_name ? { firstName: first_name } : {}),
             ...(last_name ? { lastName: last_name } : {}),
             ...(image_url ? { imageUrl: image_url } : {}),
-            ...(tempRole ? { tempRole: tempRole } : {}),
+            ...(role ? { role: role } : {}),
         };
 
         await prisma.user.update({
@@ -120,7 +121,6 @@ export async function POST(req: Request) {
             data: updatedUserData,
         });
 
-        const { role, grade, school, board, teacher_id } = unsafe_metadata;
         const teacher_id_number = Number(teacher_id);
 
         if (role === "STUDENT") {
@@ -133,6 +133,7 @@ export async function POST(req: Request) {
                         grade: typeof grade === "string" ? grade : null,
                         school: typeof school === "string" ? school : null,
                         board: typeof board === "string" ? board : null,
+                        fees: typeof fees === "string" ? Number(fees) : null,
                         teacherId: teacher_id_number,
                     },
                     create: {
@@ -140,6 +141,7 @@ export async function POST(req: Request) {
                         grade: typeof grade === "string" ? grade : null,
                         school: typeof school === "string" ? school : null,
                         board: typeof board === "string" ? board : null,
+                        fees: typeof fees === "string" ? Number(fees) : null,
                         teacherId: teacher_id_number,
                     },
                 });

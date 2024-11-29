@@ -37,6 +37,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from 'next/navigation'
 
 interface Teacher {
     user: {
@@ -48,6 +49,7 @@ interface Teacher {
 }
 
 export default function UnSafePage() {
+    const router = useRouter();
     const { user } = useUser();
     const [role, setRole] = useState<string>("");
     const [grade, setGrade] = useState<string>("");
@@ -57,6 +59,8 @@ export default function UnSafePage() {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [value, setValue] = useState<string>("");
+
+    const [loading, setLoading] = useState<boolean>(false);
 
     const handleSetRole = (value: string) => {
         setRole(value);
@@ -68,6 +72,7 @@ export default function UnSafePage() {
 
     useEffect(() => {
         // Fetch teacher data from the API
+        setLoading(true);
         const fetchTeachers = async () => {
             try {
                 const response = await fetch("/api/teachers");
@@ -82,6 +87,8 @@ export default function UnSafePage() {
             } catch (error) {
                 // Log the error if the fetch fails or if the response is invalid
                 console.error("Error fetching teachers:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -113,10 +120,16 @@ export default function UnSafePage() {
             .catch((err: Error) => {
                 console.error("Error updating user:", err);
             });
+
+        if (role === 'STUDENT') {
+            router.push('/student');
+        } else {
+            router.push('/teacher');
+        }
     };
 
     return (
-        <div className="p-4">
+        <div className="flex justify-center items-center h-screen p-4">
             <Card className="w-[350px]">
                 <CardHeader>
                     <CardTitle>Add Additional Fields to Profile</CardTitle>
@@ -291,7 +304,7 @@ export default function UnSafePage() {
                     </form>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                    <Button onClick={handleUpdate}>Save Changes</Button>
+                    <Button onClick={handleUpdate} disabled={loading}>{loading ? "Loading..." : "Save Changes"}</Button>
                 </CardFooter>
             </Card>
         </div>
