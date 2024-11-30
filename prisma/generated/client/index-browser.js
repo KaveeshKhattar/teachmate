@@ -148,6 +148,28 @@ exports.Prisma.TeacherScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.Test_TuitionScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  syllabus: 'syllabus',
+  date: 'date',
+  marks_scored: 'marks_scored',
+  total_marks: 'total_marks',
+  teacherId: 'teacherId',
+  studentId: 'studentId'
+};
+
+exports.Prisma.Test_SchoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  syllabus: 'syllabus',
+  date: 'date',
+  marks_scored: 'marks_scored',
+  total_marks: 'total_marks',
+  test_status: 'test_status',
+  studentId: 'studentId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -167,7 +189,9 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   User: 'User',
   Student: 'Student',
-  Teacher: 'Teacher'
+  Teacher: 'Teacher',
+  Test_Tuition: 'Test_Tuition',
+  Test_School: 'Test_School'
 };
 
 /**

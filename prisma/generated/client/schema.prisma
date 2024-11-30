@@ -23,24 +23,53 @@ model User {
 }
 
 model Student {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique
-  grade     String?
-  school    String?
-  board     String?
-  fees      Int?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  teacherId Int // Removed @unique
-  teacher   Teacher  @relation(fields: [teacherId], references: [userId])
-  user      User     @relation(fields: [userId], references: [id])
+  id           Int            @id @default(autoincrement())
+  userId       Int            @unique
+  grade        String?
+  school       String?
+  board        String?
+  fees         Int?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  teacherId    Int // Removed @unique
+  teacher      Teacher        @relation(fields: [teacherId], references: [userId])
+  user         User           @relation(fields: [userId], references: [id])
+  test_tuition Test_Tuition[]
+  test_school  Test_School[]
 }
 
 model Teacher {
-  id        Int       @id @default(autoincrement())
-  userId    Int       @unique
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Student   Student[]
-  user      User      @relation(fields: [userId], references: [id])
+  id           Int            @id @default(autoincrement())
+  userId       Int            @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Student      Student[]
+  user         User           @relation(fields: [userId], references: [id])
+  test_tuition Test_Tuition[]
+}
+
+model Test_Tuition {
+  id           Int      @id @default(autoincrement())
+  name         String
+  syllabus     String
+  date         DateTime
+  marks_scored Int
+  total_marks  Int
+  teacherId    Int
+  studentId    Int
+
+  teacher Teacher @relation(fields: [teacherId], references: [userId])
+  student Student @relation(fields: [studentId], references: [userId])
+}
+
+model Test_School {
+  id           Int      @id @default(autoincrement())
+  name         String
+  syllabus     String
+  date         DateTime
+  marks_scored Int
+  total_marks  Int
+  test_status  Boolean
+  studentId    Int
+  student      Student  @relation(fields: [studentId], references: [userId])
 }
