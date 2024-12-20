@@ -13,19 +13,38 @@ export default function Home() {
       {user ?
         <div className="flex flex-col items-center justify-start h-screen">
           Welcome {user.firstName} {user.lastName}!
-          {user?.unsafeMetadata.role === "TEACHER" ? <div>
-            <Link href="/teacher">
-              <Button>
-                Teacher Dashboard
-              </Button>
-            </Link>
-          </div> : <div>
-            <Link href="/student">
-              <Button>
-                Student Dashboard
-              </Button>
-            </Link>
-          </div>}
+          {user?.unsafeMetadata.role === "TEACHER" ?
+            <div className="flex flex-col space-y-4 items-center">
+              <Link href="/teacher">
+                <Button>
+                  Teacher Dashboard
+                </Button>
+              </Link>
+
+              <Link href="/teacher/schedule">
+                <Button>
+                  View Schedule
+                </Button>
+              </Link>
+
+              <Link href="/teacher/schedule/create">
+                <Button>
+                  Create Schedule
+                </Button>
+              </Link>
+            </div> :
+            <div className="flex flex-col space-y-4 items-center">
+              <Link href="/student">
+                <Button>
+                  Student Dashboard
+                </Button>
+              </Link>
+              <Link href="/student/schedule">
+                <Button>
+                  View Schedule
+                </Button>
+              </Link>
+            </div>}
         </div>
         :
         <div className="flex flex-col items-center justify-start h-screen">

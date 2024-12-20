@@ -29,6 +29,7 @@ model Student {
   school        String?
   board         String?
   fees          Int?
+  numberDaysAttendPerWeek Int?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   teacherId     Int // Removed @unique
@@ -36,6 +37,7 @@ model Student {
   user          User           @relation(fields: [userId], references: [id])
   test_tuition  Test_Tuition[]
   test_school   Test_School[]
+  schedule  Schedule[]
 }
 
 model Teacher {
@@ -72,4 +74,21 @@ model Test_School {
   test_status  Boolean
   studentId    Int
   student      Student  @relation(fields: [studentId], references: [userId])
+}
+
+model Schedule {
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  day          Int
+  slot         Int
+  createdAt   DateTime @default(now())
+  student   Student @relation(fields: [studentId], references: [id])
+}
+
+model Slot {
+  id Int @id @default(autoincrement())
+  day          Int
+  slot_number Int
+  start_time String
+  end_time String
 }

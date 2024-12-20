@@ -136,6 +136,7 @@ exports.Prisma.StudentScalarFieldEnum = {
   school: 'school',
   board: 'board',
   fees: 'fees',
+  numberDaysAttendPerWeek: 'numberDaysAttendPerWeek',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   teacherId: 'teacherId'
@@ -170,6 +171,22 @@ exports.Prisma.Test_SchoolScalarFieldEnum = {
   studentId: 'studentId'
 };
 
+exports.Prisma.ScheduleScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  day: 'day',
+  slot: 'slot',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SlotScalarFieldEnum = {
+  id: 'id',
+  day: 'day',
+  slot_number: 'slot_number',
+  start_time: 'start_time',
+  end_time: 'end_time'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -191,7 +208,9 @@ exports.Prisma.ModelName = {
   Student: 'Student',
   Teacher: 'Teacher',
   Test_Tuition: 'Test_Tuition',
-  Test_School: 'Test_School'
+  Test_School: 'Test_School',
+  Schedule: 'Schedule',
+  Slot: 'Slot'
 };
 
 /**

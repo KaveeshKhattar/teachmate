@@ -300,7 +300,7 @@ export default function TestTuition({ clerkUserId }: TestTuitionProps) {
                         <p></p>
                     )}
                     <Link href={role === "TEACHER" ?
-                        `/teacher/student/school-test?clerkUserId=${clerkUserId}` : `/student/school-test`
+                        `/teacher/student/tuition-test?clerkUserId=${clerkUserId}` : `/student/school-test`
                     }>
                         <Button variant="outline">View Details</Button>
                     </Link>
