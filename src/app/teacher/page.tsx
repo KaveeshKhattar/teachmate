@@ -1,6 +1,5 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import TestTuition from "../_components/TestTuition";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";

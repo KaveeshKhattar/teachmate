@@ -1,7 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import { useCallback, useEffect, useState } from "react";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle
+} from "@/components/ui/card";
 
 type Student = {
     id: number;
@@ -32,13 +39,6 @@ type SelectedStudentState = {
     };
 };
 
-type ScheduleInput = {
-    days: string[];
-    slotsPerDay: number[];
-    students: Student[];
-    slotsRequired: { [key: number]: number };
-};
-
 type SlotTime = {
     startTime: string;
     endTime: string;
@@ -47,7 +47,7 @@ type SlotTime = {
 type GroupedDataItem = {
     day: string; // e.g., "Monday", "Tuesday"
     slotTime: SlotTime;
-    students: any[]; // Replace `any` with the actual type of student objects if known
+    students: Student[]; // Replace `any` with the actual type of student objects if known
 };
 
 type GroupedData = GroupedDataItem[];
@@ -133,11 +133,6 @@ export default function SchedulePage() {
             SLOTS_PER_DAY.push(state.slots);
         }
     });
-    const STUDENTS = Object.entries(selectedStudents)
-        .filter(([_, state]) => state.selected)
-        .length;
-    console.log("STUDENTS: ", STUDENTS);
-    console.log("selectedStudents: ", selectedStudents);
 
     const handleStudentSelection = (studentId: number, isSelected: boolean, daysPerWeek: number) => {
         setSelectedStudents(prev => {
@@ -156,7 +151,7 @@ export default function SchedulePage() {
 
     // Initialize the schedule and availability
     const schedule: { [key: number]: [number, number][] } = {}; // Schedule for each student
-    for (let studentId in slotsRequired) {
+    for (const studentId in slotsRequired) {
         schedule[parseInt(studentId)] = [];
     }
     const slotCapacity: number[][] = SLOTS_PER_DAY.map(slots => Array(slots).fill(0)); // Track the number of students assigned to each slot
@@ -334,7 +329,7 @@ export default function SchedulePage() {
                 const student = await fetchUser(studentId);
                 acc[key].students.push(student); // Add the full student object to the group
                 return acc;
-            }, Promise.resolve({} as Record<string, { day: string; slotTime: { startTime: string; endTime: string }; students: any[] }>));
+            }, Promise.resolve({} as Record<string, { day: string; slotTime: { startTime: string; endTime: string }; students: Student[] }>));
 
             const result = Object.values(groupedData);
             console.log("Dolla sign: ", result);
@@ -382,25 +377,35 @@ export default function SchedulePage() {
 
     return (
         <>
-            <div>
-                <h1>Schedule</h1>
+            <div className="flex flex-col items-center justify-center">
+                <h1 className="text-xl font-bold mb-4">Schedule</h1>
                 {scheduleData ? (
-                    scheduleData.map(({ day, slotTime, students }, index) => (
-                        <div key={index} className="schedule-entry">
-                            <h3>{day}</h3>
-                            <p>Time: {slotTime.startTime} - {slotTime.endTime}</p>
-                            <h4>Students:</h4>
-                            <ul>
-                                {students.map((student, studentIndex) => (
-                                    <li key={studentIndex}>{student.name}</li> // Replace with actual student data
-                                ))}
-                            </ul>
-                        </div>
-                    ))
+                    <div className="flex-col space-y-4">
+                        {scheduleData.map(({ day, slotTime, students }, index) => (
+                            <Card className="w-[350px]" key={index}>
+                                <CardHeader>
+                                    <CardTitle>{day}</CardTitle>
+                                    <CardDescription>
+                                        {slotTime.startTime} - {slotTime.endTime}
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div>
+                                        <ul>
+                                            {students.map((student, studentIndex) => (
+                                                <li key={studentIndex}>{student.user.firstName}</li> // Replace with actual student data
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
                 ) : (
                     <p>Loading schedule...</p>
                 )}
             </div>
+
         </>
     );
 }

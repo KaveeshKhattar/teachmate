@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
@@ -38,13 +39,6 @@ type SelectedStudentState = {
     };
 };
 
-type ScheduleInput = {
-    days: string[];
-    slotsPerDay: number[];
-    students: number;
-    slotsRequired: { [key: number]: number };
-};
-
 export default function SchedulePage() {
 
     const { user } = useUser();
@@ -53,17 +47,6 @@ export default function SchedulePage() {
     const [students, setStudents] = useState<Student[]>([]);
 
     const slotsRequired: { [key: number]: number } = {};
-    const [slotTimes, setSlotTimes] = useState<{ [key: number]: { startTime: string, endTime: string }[] }>({});
-
-    const handleSlotTimeChange = (studentId: number, day: string, slot: number, startTime: string, endTime: string) => {
-        setSlotTimes((prev) => ({
-            ...prev,
-            [studentId]: {
-                ...prev[studentId],
-                [`${day}-${slot}`]: { startTime, endTime },
-            }
-        }));
-    };
 
     const [selectedStudents, setSelectedStudents] = useState<SelectedStudentState>({});
     Object.entries(selectedStudents).forEach(([id, state]) => {
@@ -88,8 +71,6 @@ export default function SchedulePage() {
         }
 
     }, [clerkUserId]);
-
-    const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
     const initialState: DayState = {
         monday: { checked: false, slots: 2, slotTimings: [] },
@@ -136,33 +117,33 @@ export default function SchedulePage() {
 
         console.log(selectedDays);
         const payload = Object.entries(selectedDays)
-        .filter(([_, dayData]) => dayData.checked) // Only include checked days
-        .flatMap(([day, dayData], dayIndex) => {
-            const dayNumber = ["monday", "tuesday", "wednesday", "thursday", "friday"].indexOf(day);
-            return dayData.slotTimings.map((slot, slotIndex) => ({
-                day: dayNumber,
-                slot_number: slotIndex,
-                start_time: slot.startTime,
-                end_time: slot.endTime,
-            }));
-        });
+            .filter(([_, dayData]) => dayData.checked) // eslint-disable-line @typescript-eslint/no-unused-vars
+            .flatMap(([day, dayData]) => {
+                const dayNumber = ["monday", "tuesday", "wednesday", "thursday", "friday"].indexOf(day);
+                return dayData.slotTimings.map((slot, slotIndex) => ({
+                    day: dayNumber,
+                    slot_number: slotIndex,
+                    start_time: slot.startTime,
+                    end_time: slot.endTime,
+                }));
+            });
 
         console.log("payload: ", payload);
     };
 
     const handleSubmit = async () => {
         const payload = Object.entries(selectedDays)
-        .filter(([_, dayData]) => dayData.checked) // Only include checked days
-        .flatMap(([day, dayData], dayIndex) => {
-            const dayNumber = ["monday", "tuesday", "wednesday", "thursday", "friday"].indexOf(day);
-            return dayData.slotTimings.map((slot, slotIndex) => ({
-                day: dayNumber,
-                slot_number: slotIndex,
-                start_time: slot.startTime,
-                end_time: slot.endTime,
-            }));
-        });
-    
+            .filter(([_unusedValue, dayData]) => dayData.checked)
+            .flatMap(([day, dayData]) => {
+                const dayNumber = ["monday", "tuesday", "wednesday", "thursday", "friday"].indexOf(day);
+                return dayData.slotTimings.map((slot, slotIndex) => ({
+                    day: dayNumber,
+                    slot_number: slotIndex,
+                    start_time: slot.startTime,
+                    end_time: slot.endTime,
+                }));
+            });
+
         try {
             const response = await fetch('/api/slots', {
                 method: 'POST',
@@ -171,11 +152,11 @@ export default function SchedulePage() {
                 },
                 body: JSON.stringify(payload),
             });
-    
+
             if (!response.ok) {
                 throw new Error('Failed to submit data');
             }
-    
+
             const result = await response.json();
             console.log('Success:', result);
         } catch (error) {
@@ -209,11 +190,6 @@ export default function SchedulePage() {
             SLOTS_PER_DAY.push(state.slots);
         }
     });
-    const STUDENTS = Object.entries(selectedStudents)
-        .filter(([_, state]) => state.selected)
-        .length;
-    console.log("STUDENTS: ", STUDENTS);
-    console.log("selectedStudents: ", selectedStudents);
 
     const handleStudentSelection = (studentId: number, isSelected: boolean, daysPerWeek: number) => {
         setSelectedStudents(prev => {
@@ -232,7 +208,7 @@ export default function SchedulePage() {
 
     // Initialize the schedule and availability
     const schedule: { [key: number]: [number, number][] } = {}; // Schedule for each student
-    for (let studentId in slotsRequired) {
+    for (const studentId in slotsRequired) {
         schedule[parseInt(studentId)] = [];
     }
     const slotCapacity: number[][] = SLOTS_PER_DAY.map(slots => Array(slots).fill(0)); // Track the number of students assigned to each slot
@@ -380,7 +356,7 @@ export default function SchedulePage() {
             console.log("Sending slots info...")
             handleSubmit();
         } catch (error) {
-            console.error("Failed to send slots:", error);   
+            console.error("Failed to send slots:", error);
         }
     };
 
@@ -393,18 +369,13 @@ export default function SchedulePage() {
         console.log("slotsRequired: ", slotsRequired);
     }, [fetchStudents]);
 
-
-    const [startTimeInputs, setStartTimeInputs] = useState({});
-    const [endTimeInputs, setEndTimeInputs] = useState({});
-    const [slots, setSlots] = useState([]);
-
     return (
-        <>
-            <div>
-                <div>
-                    <h2>Select Days and Slots</h2>
+        <div>
+            <div className="flex justify-center items-start">
+                <div className="">
+                    <h1 className="mb-4">Select Days and Slots</h1>
                     {Object.keys(selectedDays).map((day) => (
-                        <div key={day}>
+                        <div key={day} className="m-2 p-2">
                             <label>
                                 <input
                                     type="checkbox"
@@ -427,6 +398,7 @@ export default function SchedulePage() {
                                     handleSlotsChange(day, parseInt(e.target.value) || 0)
                                 }
                             />
+                            <p className="inline ml-2">slots per week</p>
                             {/* {
                                 Array.from({ length: selectedDays[day].slots }, (_, i) => (
                                     <div key={i} className={selectedDays[day].checked ? '' : 'opacity-50'}>
@@ -452,14 +424,14 @@ export default function SchedulePage() {
                                 <div key={day}>
                                     {[...Array(selectedDays[day].slots)].map((_, index) => (
                                         <div key={index} className={selectedDays[day].checked ? '' : 'opacity-50'}>
-                                            <label>Start Time {index + 1}</label>
+                                            <label>Start Time</label>
                                             <input
                                                 type="time"
                                                 value={selectedDays[day].slotTimings[index]?.startTime || ""}
                                                 onChange={(e) => handleTimeChange(day, index, 'startTime', e.target.value)}
                                                 disabled={!selectedDays[day].checked}
                                             />
-                                            <label>End Time {index + 1}</label>
+                                            <label>End Time</label>
                                             <input
                                                 type="time"
                                                 value={selectedDays[day].slotTimings[index]?.endTime || ""}
@@ -479,7 +451,7 @@ export default function SchedulePage() {
                 </div>
 
                 <div className="space-y-2">
-                    <h1>Students: </h1>
+                    <h1 className="mb-4">Select Students </h1>
                     {students.map((student) => (
                         <div key={student.id} className="flex items-center gap-4">
                             <input
@@ -523,10 +495,14 @@ export default function SchedulePage() {
                 <div>
                     {/* <pre>{JSON.stringify(slotsRequired, null, 2)}</pre> */}
                 </div>
+
+            </div>
+
+            <div className="flex justify-center items-center ml-20">
                 <Button onClick={sendScheduleToAPI}>
                     Generate Schedule
                 </Button>
             </div>
-        </>
+        </div>
     );
 }

@@ -58,7 +58,6 @@ export default function TestTuition({ clerkUserId }: TestTuitionProps) {
 
     const pathname = usePathname(); // Get the current pathname
     const role = pathname?.includes("/teacher") ? "TEACHER" : "STUDENT";
-    const name = pathname?.split("/")[3];
 
     const isBeforeToday = (selectedDate: string) => {
         const today = new Date();

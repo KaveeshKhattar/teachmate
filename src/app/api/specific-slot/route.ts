@@ -32,7 +32,7 @@ export async function GET(request: Request) {
 
         // Return the slot time data
         return NextResponse.json(slotData);
-    } catch (error) {
+    } catch {
         // Handle any errors that occur during the query
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }

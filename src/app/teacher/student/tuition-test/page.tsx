@@ -19,8 +19,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useCallback, useEffect, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 type SchoolTest = {
@@ -34,8 +33,7 @@ type SchoolTest = {
     status: "pending" | "completed";
 };
 
-
-export default function TuitionTest() {
+function TuitionTestComponent() {
     const [tests, setTests] = useState<SchoolTest[]>([]);
 
     const searchParams = useSearchParams();
@@ -144,149 +142,159 @@ export default function TuitionTest() {
     }, [fetchTests, clerkUserId]); // Trigger fetch when user.id is available
 
     return (
-        <div>
-            <ul>
-                {tests.length > 0 ? (
-                    tests.map((test) => (
-                        <div
-                            className="flex flex-col justify-center items-center mb-4"
-                            key={test.id}
-                        >
-                            <Card className="w-[350px]">
-                                <CardHeader>
-                                    <CardTitle>{test.name}</CardTitle>
-                                    <CardDescription>Test (School)</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="grid w-full items-center gap-4">
-                                        <div className="flex flex-col space-y-1.5">
-                                            <p>Syllabus: {test.syllabus}</p>
-                                        </div>
+        <Suspense fallback={<p>Loading tests...</p>}>
+            <div>
+                <ul>
+                    {tests.length > 0 ? (
+                        tests.map((test) => (
+                            <div
+                                className="flex flex-col justify-center items-center mb-4"
+                                key={test.id}
+                            >
+                                <Card className="w-[350px]">
+                                    <CardHeader>
+                                        <CardTitle>{test.name}</CardTitle>
+                                        <CardDescription>Test (School)</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="grid w-full items-center gap-4">
+                                            <div className="flex flex-col space-y-1.5">
+                                                <p>Syllabus: {test.syllabus}</p>
+                                            </div>
 
-                                        <div className="flex flex-col space-y-1.5">
-                                            <p>Date: {new Date(test.date).toLocaleDateString()}</p>
-                                        </div>
+                                            <div className="flex flex-col space-y-1.5">
+                                                <p>Date: {new Date(test.date).toLocaleDateString()}</p>
+                                            </div>
 
-                                        <div className="flex flex-col space-y-1.5">
-                                            Marks Scored: {test.marks_scored}
-                                        </div>
+                                            <div className="flex flex-col space-y-1.5">
+                                                Marks Scored: {test.marks_scored}
+                                            </div>
 
-                                        <div className="flex flex-col space-y-1.5">
-                                            Total Marks: {test.total_marks}
+                                            <div className="flex flex-col space-y-1.5">
+                                                Total Marks: {test.total_marks}
+                                            </div>
                                         </div>
-                                    </div>
-                                </CardContent>
-                                <CardFooter className="flex justify-between">
-                                    <Button
-                                        variant="destructive"
-                                        onClick={() => handleDelete(test.id)}
-                                    >
-                                        Delete
-                                    </Button>
-
-                                    <Dialog>
-                                        <DialogTrigger
-                                            asChild
-                                            onClick={() => {
-                                                // Set the selected test ID when the dialog is triggered
-                                                setSelectedTestId(test.id);
-                                                setTestName(test.name);
-                                                setSyllabus(test.syllabus);
-                                                setDate(test.date.toLocaleString().split("T")[0]); // format date
-                                                setMarksScored(test.marks_scored.toString());
-                                                setTotalMarks(test.total_marks.toString());
-                                            }}
+                                    </CardContent>
+                                    <CardFooter className="flex justify-between">
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() => handleDelete(test.id)}
                                         >
-                                            <Button>Update Test</Button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[425px]">
-                                            <DialogHeader>
-                                                <DialogTitle>Update Test (School)</DialogTitle>
-                                                <DialogDescription>
-                                                    Update the school test that was, or is yet to be
-                                                    conducted. Click save when you&apos;re done.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="grid gap-4 py-4">
-                                                <div className="grid grid-cols-4 items-center gap-4">
-                                                    <Label htmlFor="name" className="text-right">
-                                                        Test Name
-                                                    </Label>
-                                                    <Input
-                                                        id="name"
-                                                        value={testName}
-                                                        onChange={(e) => setTestName(e.target.value)}
-                                                        className="col-span-3"
-                                                    />
-                                                </div>
-                                                <div className="grid grid-cols-4 items-center gap-4">
-                                                    <Label htmlFor="syllabus" className="text-right">
-                                                        Syllabus
-                                                    </Label>
-                                                    <Input
-                                                        id="syllabus"
-                                                        value={syllabus}
-                                                        onChange={(e) => setSyllabus(e.target.value)}
-                                                        className="col-span-3"
-                                                    />
-                                                </div>
+                                            Delete
+                                        </Button>
 
-                                                <div className="grid grid-cols-4 gap-4 items-center">
-                                                    <Label htmlFor="date" className="text-right">
-                                                        Date
-                                                    </Label>
-                                                    <input
-                                                        id="date"
-                                                        type="date"
-                                                        value={date}
-                                                        onChange={(e) => setDate(e.target.value)}
-                                                        className="col-span-3"
-                                                    />
-                                                </div>
-
-                                                {isBeforeToday(date) && (
+                                        <Dialog>
+                                            <DialogTrigger
+                                                asChild
+                                                onClick={() => {
+                                                    // Set the selected test ID when the dialog is triggered
+                                                    setSelectedTestId(test.id);
+                                                    setTestName(test.name);
+                                                    setSyllabus(test.syllabus);
+                                                    setDate(test.date.toLocaleString().split("T")[0]); // format date
+                                                    setMarksScored(test.marks_scored.toString());
+                                                    setTotalMarks(test.total_marks.toString());
+                                                }}
+                                            >
+                                                <Button>Update Test</Button>
+                                            </DialogTrigger>
+                                            <DialogContent className="sm:max-w-[425px]">
+                                                <DialogHeader>
+                                                    <DialogTitle>Update Test (School)</DialogTitle>
+                                                    <DialogDescription>
+                                                        Update the school test that was, or is yet to be
+                                                        conducted. Click save when you&apos;re done.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <div className="grid gap-4 py-4">
                                                     <div className="grid grid-cols-4 items-center gap-4">
-                                                        <Label htmlFor="marksScored" className="text-right">
-                                                            Marks Scored
+                                                        <Label htmlFor="name" className="text-right">
+                                                            Test Name
                                                         </Label>
                                                         <Input
-                                                            id="marksScored"
-                                                            value={marksScored}
-                                                            onChange={(e) => setMarksScored(e.target.value)}
+                                                            id="name"
+                                                            value={testName}
+                                                            onChange={(e) => setTestName(e.target.value)}
                                                             className="col-span-3"
                                                         />
                                                     </div>
-                                                )}
+                                                    <div className="grid grid-cols-4 items-center gap-4">
+                                                        <Label htmlFor="syllabus" className="text-right">
+                                                            Syllabus
+                                                        </Label>
+                                                        <Input
+                                                            id="syllabus"
+                                                            value={syllabus}
+                                                            onChange={(e) => setSyllabus(e.target.value)}
+                                                            className="col-span-3"
+                                                        />
+                                                    </div>
 
-                                                <div className="grid grid-cols-4 items-center gap-4">
-                                                    <Label htmlFor="totalMarks" className="text-right">
-                                                        Total Marks
-                                                    </Label>
-                                                    <Input
-                                                        id="totalMarks"
-                                                        value={totalMarks}
-                                                        onChange={(e) => setTotalMarks(e.target.value)}
-                                                        className="col-span-3"
-                                                    />
+                                                    <div className="grid grid-cols-4 gap-4 items-center">
+                                                        <Label htmlFor="date" className="text-right">
+                                                            Date
+                                                        </Label>
+                                                        <input
+                                                            id="date"
+                                                            type="date"
+                                                            value={date}
+                                                            onChange={(e) => setDate(e.target.value)}
+                                                            className="col-span-3"
+                                                        />
+                                                    </div>
+
+                                                    {isBeforeToday(date) && (
+                                                        <div className="grid grid-cols-4 items-center gap-4">
+                                                            <Label htmlFor="marksScored" className="text-right">
+                                                                Marks Scored
+                                                            </Label>
+                                                            <Input
+                                                                id="marksScored"
+                                                                value={marksScored}
+                                                                onChange={(e) => setMarksScored(e.target.value)}
+                                                                className="col-span-3"
+                                                            />
+                                                        </div>
+                                                    )}
+
+                                                    <div className="grid grid-cols-4 items-center gap-4">
+                                                        <Label htmlFor="totalMarks" className="text-right">
+                                                            Total Marks
+                                                        </Label>
+                                                        <Input
+                                                            id="totalMarks"
+                                                            value={totalMarks}
+                                                            onChange={(e) => setTotalMarks(e.target.value)}
+                                                            className="col-span-3"
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <DialogFooter>
-                                                <Button type="submit" onClick={handleSubmit}>
-                                                    Save changes
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                </CardFooter>
-                            </Card>
-                        </div>
-                    ))
-                ) : (
-                    <p className="flex items-center justify-center mt-8">
-                        No tests found
-                    </p>
-                )}
-            </ul>
-        </div>
+                                                <DialogFooter>
+                                                    <Button type="submit" onClick={handleSubmit}>
+                                                        Save changes
+                                                    </Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </CardFooter>
+                                </Card>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="flex items-center justify-center mt-8">
+                            No tests found
+                        </p>
+                    )}
+                </ul>
+            </div>
+        </Suspense>
+    );
+}
+
+export default function WrappedTuitionTestComponent() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <TuitionTestComponent />
+        </Suspense>
     );
 }

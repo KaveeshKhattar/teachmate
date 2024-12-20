@@ -6,63 +6,70 @@ import {
     CardHeader,
     CardTitle
 } from "@/components/ui/card";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 type SchoolTest = {
     id: string;
     name: string;
     syllabus: string;
-    date: Date;
+    date: string; // Change to string if the API returns a date string
     marks_scored: number;
     total_marks: number;
     student_id: number;
     status: "pending" | "completed";
 };
 
-
-export default function SchoolTest() {
+function SchoolTestComponent() {
     const [tests, setTests] = useState<SchoolTest[]>([]);
+    const [loading, setLoading] = useState<boolean>(true); // Loading state
+    const [error, setError] = useState<string | null>(null); // Error state
 
     const searchParams = useSearchParams();
     const clerkUserId = searchParams.get('clerkUserId');
-
-    const [testName, setTestName] = useState("");
-    const [syllabus, setSyllabus] = useState("");
-    const [date, setDate] = useState("");
-    const [marksScored, setMarksScored] = useState("");
-    const [totalMarks, setTotalMarks] = useState("");
     
     const fetchTests = useCallback(async () => {
         if (!clerkUserId) {
-            console.error("User is not available");
+            setError("User is not available");
             return;
         }
 
         try {
             const response = await fetch(`/api/tuitionTest?userId=${clerkUserId}`, {
-                method: "GET", // Use GET request here
+                method: "GET", 
                 headers: {
-                    "Content-Type": "application/json", // optional
+                    "Content-Type": "application/json",
                 },
             });
 
             if (response.ok) {
                 const data = await response.json();
-                setTests(data); // Set the data to state
-                console.log("Tests fetched successfully", data);
+                setTests(data); 
+                setError(null); // Reset error if fetch is successful
             } else {
-                console.error("Failed to fetch tests");
+                setError("Failed to fetch tests");
             }
         } catch (error) {
-            console.error("Error fetching tests:", error);
+            setError("Error fetching tests: " + error);
+        } finally {
+            setLoading(false); 
         }
     }, [clerkUserId]);
 
-    // useEffect to handle the asynchronous fetch
     useEffect(() => {
-        fetchTests();
-    }, [fetchTests, clerkUserId]); // Trigger fetch when user.id is available
+        if (clerkUserId) {
+            fetchTests();
+        } else {
+            setError("clerkUserId is not available");
+        }
+    }, [clerkUserId, fetchTests]);
+
+    if (loading) {
+        return <div>Loading tests...</div>;
+    }
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div>
@@ -107,5 +114,13 @@ export default function SchoolTest() {
                 )}
             </ul>
         </div>
+    );
+}
+
+export default function WrappedSchoolTestComponent() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SchoolTestComponent />
+        </Suspense>
     );
 }

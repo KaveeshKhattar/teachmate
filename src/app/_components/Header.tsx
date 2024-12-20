@@ -4,10 +4,10 @@ import Link from "next/link";
 
 export default function Header() {
     return (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center bg-[#d1d5db]">
             <div className="p-2">
                 <Link href="/">
-                    Teachmate
+                    <p className="text-lg font-bold">Teachmate</p>
                 </Link>
             </div>
             <div className="flex gap-4 p-2">

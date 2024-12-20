@@ -26,12 +26,6 @@ export default function TuitionTest() {
   
   const { user } = useUser();
 
-  const [testName, setTestName] = useState("");
-  const [syllabus, setSyllabus] = useState("");
-  const [date, setDate] = useState("");
-  const [marksScored, setMarksScored] = useState("");
-  const [totalMarks, setTotalMarks] = useState("");
-
   const fetchTests = useCallback(async () => {
     if (!user?.id) {
       console.error("User is not available");

@@ -48,8 +48,6 @@ const TestSchool: React.FC<TestSchoolProps> = ({ clerkUserId }) => {
   const [totalMarks, setTotalMarks] = useState("");
   const [chartData, setChartData] = useState<ChartData[]>([]);
 
-  console.log("clerkUserId in TestSchool: ", clerkUserId);
-
   const isBeforeToday = (selectedDate: string) => {
     const today = new Date();
     const selected = new Date(selectedDate);
