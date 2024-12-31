@@ -6,6 +6,7 @@ This platform's purpose:
 - to streamline a teacher's workflow and say goodbye to logistical challenges with on-the-go scheduling
 
 ## Origin Story
+
 The inspiration for building TeachMate came from a personal experience.
 
 - My mom conducts tuition classes in math for children from the 6th to 8th grade.
@@ -14,9 +15,9 @@ The inspiration for building TeachMate came from a personal experience.
 
 - Moreover, she used to track the students' performance on paper and it would not provide the best experience when trying to measure long term growth.
 
-- So, I built TeachMate to streamline scheduling, improve communication with parents and students, and track long-term progress.
+- So, I built TeachMate to streamline scheduling, improving transparency with parents and students about class timings, and track long-term progress via graphical charts.
 
-- The students' parents can see their child's growth and the students can also see their personalised schedule, hence, avoiding miscomminication.
+- The parents can see their child's growth over time and the students can see their personalised schedule.
 
 - TeachMate is now used by her and 8 of her students.
 
