@@ -10,15 +10,15 @@ The inspiration for building TeachMate came from a personal experience.
 
 - My mom conducts tuition classes in math for children from the 6th to 8th grade.
 
-- My mom used to spend a significant amount of time in the beginnning of week every Sunday evening creating schedules for her students and sometimes in the middle of the week too, when kids would cancel or would want to reschedule
+- She used to spend a significant amount of time at the beginning of the week, every Sunday evening, creating schedules for her students and sometimes in the middle of the week too, when kids would cancel or would want to reschedule.
 
-- Moreover, she used to track performance on paper and it would not provide the best experience when trhying to measure long term growth.
+- Moreover, she used to track the students' performance on paper and it would not provide the best experience when trying to measure long term growth.
 
-- So, I decided to help solve these problems by creating a tool which can help her manage these.
+- So, I built TeachMate to streamline scheduling, improve communication with parents and students, and track long-term progress.
 
-- The students' parents can see thwir growth and the students can also see their personalised schedule avoiding miscomminication.
+- The students' parents can see their child's growth and the students can also see their personalised schedule, hence, avoiding miscomminication.
 
-- Now it is used by her and 8 of her students.
+- TeachMate is now used by her and 8 of her students.
 
 ## Installation
 
