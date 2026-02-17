@@ -1,94 +1,154 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
-  provider = "prisma-client-js"
-  output   = "./generated/client"
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+}
+
+enum WeekDay {
+  MON
+  TUE
+  WED
+  THU
+  FRI
+  SAT
+  SUN
+}
+
+model waitlist {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  email       String   @unique
-  firstName   String?
-  lastName    String?
-  imageUrl    String?
-  clerkUserId String   @unique
-  role        String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  Student     Student?
-  Teacher     Teacher?
+  id          Int    @id @default(autoincrement())
+  clerkUserId String @unique
+
+  email     String    @unique
+  firstName String?
+  lastName  String?
+  imageUrl  String?
+  role      UserRole?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  student Student?
+  teacher Teacher?
 }
 
 model Student {
-  id            Int            @id @default(autoincrement())
-  userId        Int            @unique
-  grade         String?
-  school        String?
-  board         String?
-  fees          Int?
-  numberDaysAttendPerWeek Int?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  teacherId     Int // Removed @unique
-  teacher       Teacher        @relation(fields: [teacherId], references: [userId])
-  user          User           @relation(fields: [userId], references: [id])
-  test_tuition  Test_Tuition[]
-  test_school   Test_School[]
-  schedule  Schedule[]
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  teacherId Int
+  user      User    @relation(fields: [userId], references: [id])
+  teacher   Teacher @relation(fields: [teacherId], references: [userId])
+
+  grade  String?
+  school String?
+  board  String?
+  fees   Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assignments SlotAssignment[]
 }
 
 model Teacher {
-  id           Int            @id @default(autoincrement())
-  userId       Int            @unique
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Student      Student[]
-  user         User           @relation(fields: [userId], references: [id])
-  test_tuition Test_Tuition[]
-}
+  id      Int       @id @default(autoincrement())
+  userId  Int       @unique
+  user    User      @relation(fields: [userId], references: [id])
+  Student Student[]
 
-model Test_Tuition {
-  id           Int      @id @default(autoincrement())
-  name         String
-  syllabus     String
-  date         DateTime
-  marks_scored Int
-  total_marks  Int
-  teacherId    Int
-  studentId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  teacher Teacher @relation(fields: [teacherId], references: [userId])
-  student Student @relation(fields: [studentId], references: [userId])
-}
-
-model Test_School {
-  id           Int      @id @default(autoincrement())
-  name         String
-  syllabus     String
-  date         DateTime
-  marks_scored Int
-  total_marks  Int
-  test_status  Boolean
-  studentId    Int
-  student      Student  @relation(fields: [studentId], references: [userId])
-}
-
-model Schedule {
-  id           Int      @id @default(autoincrement())
-  studentId    Int
-  day          Int
-  slot         Int
-  createdAt   DateTime @default(now())
-  student   Student @relation(fields: [studentId], references: [id])
+  slots              Slot[]
+  recurringSchedules RecurringSchedule[]
 }
 
 model Slot {
   id Int @id @default(autoincrement())
-  day          Int
-  slot_number Int
-  start_time String
-  end_time String
+
+  teacherId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+  startTime DateTime
+  endTime   DateTime
+
+  maxStudents Int
+
+  createdAt DateTime @default(now())
+
+  assignments SlotAssignment[]
+}
+
+model SlotAssignment {
+  id Int @id @default(autoincrement())
+
+  slotId Int
+  slot   Slot @relation(fields: [slotId], references: [id])
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+
+  assignedAt DateTime @default(now())
+
+  @@unique([slotId, studentId])
+}
+
+model RecurringSchedule {
+  id Int @id @default(autoincrement())
+
+  teacherId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+  startTime DateTime
+  endTime   DateTime
+
+  startDate DateTime
+  endDate   DateTime?
+
+  maxStudents Int
+
+  days RecurringDay[]
+  exceptions RecurringException[]
+
+  createdAt DateTime @default(now())
+}
+
+model RecurringDay {
+  id Int @id @default(autoincrement())
+
+  recurringScheduleId Int
+  recurringSchedule   RecurringSchedule @relation(fields: [recurringScheduleId], references: [id], onDelete: Cascade)
+  day                 WeekDay
+}
+
+model RecurringException {
+  id Int @id @default(autoincrement())
+
+  recurringScheduleId Int
+  recurringSchedule   RecurringSchedule @relation(fields: [recurringScheduleId], references: [id], onDelete: Cascade)
+
+  date DateTime   // the day to skip
+
+  createdAt DateTime @default(now())
+
+  @@unique([recurringScheduleId, date])
 }
