@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/lib/prisma';
 import { auth } from "@clerk/nextjs/server";
+import { Pool } from "pg";
 
 export async function GET() {
   const { userId: clerkUserId } = await auth();
@@ -33,7 +34,13 @@ export async function GET() {
     },
     include: {
       days: true,
-      exceptions: true,   // ✅ IMPORTANT
+      exceptions: {
+        select: {
+          date: true,
+          startTime: true,  // ← include these
+          endTime: true,
+        },
+      },
     },
   });
 
@@ -72,4 +79,73 @@ export async function DELETE(req: NextRequest) {
   });
 
   return NextResponse.json({ success: true });
+}
+
+
+type PatchBody = {
+  scheduleId: number;
+  startDate: string; // yyyy-mm-dd
+  startTime: string; // HH:mm
+  endTime: string;   // HH:mm
+  days: ("MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN")[];
+};
+
+function combineDateAndTime(date: string, time: string) {
+  return new Date(`${date}T${time}:00Z`); // ← add Z
+}
+
+type WeekDayType = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+
+export async function PATCH(req: Request) {
+  let body: PatchBody;
+
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const { scheduleId, startDate, startTime, endTime, days } = body;
+
+  if (!scheduleId || !startDate || !startTime || !endTime || !days?.length) {
+    return NextResponse.json(
+      { error: "Invalid payload" },
+      { status: 400 }
+    );
+  }
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      // 1. update main schedule
+      await tx.recurringSchedule.update({
+        where: { id: scheduleId },
+        data: {
+          startDate: new Date(startDate),
+          startTime: combineDateAndTime(startDate, startTime),
+          endTime: combineDateAndTime(startDate, endTime),
+        },
+      });
+
+      // 2. replace days
+      await tx.recurringDay.deleteMany({
+        where: { recurringScheduleId: scheduleId },
+      });
+
+      await tx.recurringDay.createMany({
+        data: days.map((d) => ({
+          recurringScheduleId: scheduleId,
+          day: d as WeekDayType,
+        })),
+      });
+    });
+
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error(e);
+
+    return NextResponse.json(
+      { error: "Failed to update recurring schedule" },
+      { status: 500 }
+    );
+  }
 }

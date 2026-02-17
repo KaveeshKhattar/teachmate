@@ -40,6 +40,8 @@ export type RecurringExceptionMinAggregateOutputType = {
   id: number | null
   recurringScheduleId: number | null
   date: Date | null
+  startTime: Date | null
+  endTime: Date | null
   createdAt: Date | null
 }
 
@@ -47,6 +49,8 @@ export type RecurringExceptionMaxAggregateOutputType = {
   id: number | null
   recurringScheduleId: number | null
   date: Date | null
+  startTime: Date | null
+  endTime: Date | null
   createdAt: Date | null
 }
 
@@ -54,6 +58,8 @@ export type RecurringExceptionCountAggregateOutputType = {
   id: number
   recurringScheduleId: number
   date: number
+  startTime: number
+  endTime: number
   createdAt: number
   _all: number
 }
@@ -73,6 +79,8 @@ export type RecurringExceptionMinAggregateInputType = {
   id?: true
   recurringScheduleId?: true
   date?: true
+  startTime?: true
+  endTime?: true
   createdAt?: true
 }
 
@@ -80,6 +88,8 @@ export type RecurringExceptionMaxAggregateInputType = {
   id?: true
   recurringScheduleId?: true
   date?: true
+  startTime?: true
+  endTime?: true
   createdAt?: true
 }
 
@@ -87,6 +97,8 @@ export type RecurringExceptionCountAggregateInputType = {
   id?: true
   recurringScheduleId?: true
   date?: true
+  startTime?: true
+  endTime?: true
   createdAt?: true
   _all?: true
 }
@@ -181,6 +193,8 @@ export type RecurringExceptionGroupByOutputType = {
   id: number
   recurringScheduleId: number
   date: Date
+  startTime: Date | null
+  endTime: Date | null
   createdAt: Date
   _count: RecurringExceptionCountAggregateOutputType | null
   _avg: RecurringExceptionAvgAggregateOutputType | null
@@ -211,6 +225,8 @@ export type RecurringExceptionWhereInput = {
   id?: Prisma.IntFilter<"RecurringException"> | number
   recurringScheduleId?: Prisma.IntFilter<"RecurringException"> | number
   date?: Prisma.DateTimeFilter<"RecurringException"> | Date | string
+  startTime?: Prisma.DateTimeNullableFilter<"RecurringException"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"RecurringException"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringException"> | Date | string
   recurringSchedule?: Prisma.XOR<Prisma.RecurringScheduleScalarRelationFilter, Prisma.RecurringScheduleWhereInput>
 }
@@ -219,6 +235,8 @@ export type RecurringExceptionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   recurringScheduleId?: Prisma.SortOrder
   date?: Prisma.SortOrder
+  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   recurringSchedule?: Prisma.RecurringScheduleOrderByWithRelationInput
 }
@@ -231,6 +249,8 @@ export type RecurringExceptionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RecurringExceptionWhereInput | Prisma.RecurringExceptionWhereInput[]
   recurringScheduleId?: Prisma.IntFilter<"RecurringException"> | number
   date?: Prisma.DateTimeFilter<"RecurringException"> | Date | string
+  startTime?: Prisma.DateTimeNullableFilter<"RecurringException"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"RecurringException"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringException"> | Date | string
   recurringSchedule?: Prisma.XOR<Prisma.RecurringScheduleScalarRelationFilter, Prisma.RecurringScheduleWhereInput>
 }, "id" | "recurringScheduleId_date">
@@ -239,6 +259,8 @@ export type RecurringExceptionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   recurringScheduleId?: Prisma.SortOrder
   date?: Prisma.SortOrder
+  startTime?: Prisma.SortOrderInput | Prisma.SortOrder
+  endTime?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.RecurringExceptionCountOrderByAggregateInput
   _avg?: Prisma.RecurringExceptionAvgOrderByAggregateInput
@@ -254,11 +276,15 @@ export type RecurringExceptionScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"RecurringException"> | number
   recurringScheduleId?: Prisma.IntWithAggregatesFilter<"RecurringException"> | number
   date?: Prisma.DateTimeWithAggregatesFilter<"RecurringException"> | Date | string
+  startTime?: Prisma.DateTimeNullableWithAggregatesFilter<"RecurringException"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableWithAggregatesFilter<"RecurringException"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RecurringException"> | Date | string
 }
 
 export type RecurringExceptionCreateInput = {
   date: Date | string
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   createdAt?: Date | string
   recurringSchedule: Prisma.RecurringScheduleCreateNestedOneWithoutExceptionsInput
 }
@@ -267,11 +293,15 @@ export type RecurringExceptionUncheckedCreateInput = {
   id?: number
   recurringScheduleId: number
   date: Date | string
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   createdAt?: Date | string
 }
 
 export type RecurringExceptionUpdateInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   recurringSchedule?: Prisma.RecurringScheduleUpdateOneRequiredWithoutExceptionsNestedInput
 }
@@ -280,6 +310,8 @@ export type RecurringExceptionUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   recurringScheduleId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -287,11 +319,15 @@ export type RecurringExceptionCreateManyInput = {
   id?: number
   recurringScheduleId: number
   date: Date | string
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   createdAt?: Date | string
 }
 
 export type RecurringExceptionUpdateManyMutationInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,6 +335,8 @@ export type RecurringExceptionUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   recurringScheduleId?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -321,6 +359,8 @@ export type RecurringExceptionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   recurringScheduleId?: Prisma.SortOrder
   date?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -333,6 +373,8 @@ export type RecurringExceptionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   recurringScheduleId?: Prisma.SortOrder
   date?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -340,6 +382,8 @@ export type RecurringExceptionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   recurringScheduleId?: Prisma.SortOrder
   date?: Prisma.SortOrder
+  startTime?: Prisma.SortOrder
+  endTime?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -392,12 +436,16 @@ export type RecurringExceptionUncheckedUpdateManyWithoutRecurringScheduleNestedI
 
 export type RecurringExceptionCreateWithoutRecurringScheduleInput = {
   date: Date | string
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   createdAt?: Date | string
 }
 
 export type RecurringExceptionUncheckedCreateWithoutRecurringScheduleInput = {
   id?: number
   date: Date | string
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -434,29 +482,39 @@ export type RecurringExceptionScalarWhereInput = {
   id?: Prisma.IntFilter<"RecurringException"> | number
   recurringScheduleId?: Prisma.IntFilter<"RecurringException"> | number
   date?: Prisma.DateTimeFilter<"RecurringException"> | Date | string
+  startTime?: Prisma.DateTimeNullableFilter<"RecurringException"> | Date | string | null
+  endTime?: Prisma.DateTimeNullableFilter<"RecurringException"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"RecurringException"> | Date | string
 }
 
 export type RecurringExceptionCreateManyRecurringScheduleInput = {
   id?: number
   date: Date | string
+  startTime?: Date | string | null
+  endTime?: Date | string | null
   createdAt?: Date | string
 }
 
 export type RecurringExceptionUpdateWithoutRecurringScheduleInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RecurringExceptionUncheckedUpdateWithoutRecurringScheduleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RecurringExceptionUncheckedUpdateManyWithoutRecurringScheduleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -466,6 +524,8 @@ export type RecurringExceptionSelect<ExtArgs extends runtime.Types.Extensions.In
   id?: boolean
   recurringScheduleId?: boolean
   date?: boolean
+  startTime?: boolean
+  endTime?: boolean
   createdAt?: boolean
   recurringSchedule?: boolean | Prisma.RecurringScheduleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["recurringException"]>
@@ -474,6 +534,8 @@ export type RecurringExceptionSelectCreateManyAndReturn<ExtArgs extends runtime.
   id?: boolean
   recurringScheduleId?: boolean
   date?: boolean
+  startTime?: boolean
+  endTime?: boolean
   createdAt?: boolean
   recurringSchedule?: boolean | Prisma.RecurringScheduleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["recurringException"]>
@@ -482,6 +544,8 @@ export type RecurringExceptionSelectUpdateManyAndReturn<ExtArgs extends runtime.
   id?: boolean
   recurringScheduleId?: boolean
   date?: boolean
+  startTime?: boolean
+  endTime?: boolean
   createdAt?: boolean
   recurringSchedule?: boolean | Prisma.RecurringScheduleDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["recurringException"]>
@@ -490,10 +554,12 @@ export type RecurringExceptionSelectScalar = {
   id?: boolean
   recurringScheduleId?: boolean
   date?: boolean
+  startTime?: boolean
+  endTime?: boolean
   createdAt?: boolean
 }
 
-export type RecurringExceptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recurringScheduleId" | "date" | "createdAt", ExtArgs["result"]["recurringException"]>
+export type RecurringExceptionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "recurringScheduleId" | "date" | "startTime" | "endTime" | "createdAt", ExtArgs["result"]["recurringException"]>
 export type RecurringExceptionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   recurringSchedule?: boolean | Prisma.RecurringScheduleDefaultArgs<ExtArgs>
 }
@@ -513,6 +579,8 @@ export type $RecurringExceptionPayload<ExtArgs extends runtime.Types.Extensions.
     id: number
     recurringScheduleId: number
     date: Date
+    startTime: Date | null
+    endTime: Date | null
     createdAt: Date
   }, ExtArgs["result"]["recurringException"]>
   composites: {}
@@ -941,6 +1009,8 @@ export interface RecurringExceptionFieldRefs {
   readonly id: Prisma.FieldRef<"RecurringException", 'Int'>
   readonly recurringScheduleId: Prisma.FieldRef<"RecurringException", 'Int'>
   readonly date: Prisma.FieldRef<"RecurringException", 'DateTime'>
+  readonly startTime: Prisma.FieldRef<"RecurringException", 'DateTime'>
+  readonly endTime: Prisma.FieldRef<"RecurringException", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"RecurringException", 'DateTime'>
 }
     

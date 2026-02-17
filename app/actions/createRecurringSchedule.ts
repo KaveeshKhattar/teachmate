@@ -24,8 +24,9 @@ type Input = {
   maxStudents: number;
 };
 
+// Add Z to treat as UTC, not local time
 function combine(date: string, time: string) {
-  return new Date(`${date}T${time}:00`);
+  return new Date(`${date}T${time}:00Z`); // ← add Z
 }
 
 export async function createRecurringSchedule(input: Input) {

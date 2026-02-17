@@ -148,6 +148,9 @@ model RecurringException {
 
   date DateTime   // the day to skip
 
+  startTime DateTime?
+  endTime   DateTime?
+
   createdAt DateTime @default(now())
 
   @@unique([recurringScheduleId, date])

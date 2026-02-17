@@ -1,57 +1,103 @@
-import { NextResponse } from "next/server";
+// app/api/recurring-schedules/occurrence/[date]/route.ts
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
 
-export async function DELETE(
-  req: Request,
+export async function PATCH(
+  req: NextRequest,
   { params }: { params: Promise<{ date: string }> }
 ) {
-  const { userId: clerkUserId } = await auth();
+  const { date } = await params; // ← await params
+  const { startTime, endTime } = await req.json();
+  const scheduleIdNum = Number(req.nextUrl.searchParams.get("scheduleId"));
 
-  if (!clerkUserId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const { date } = await params; // ✅ must await params
-
-  const { searchParams } = new URL(req.url);
-  const scheduleId = searchParams.get("scheduleId");
-
-  if (!scheduleId) {
-    return NextResponse.json(
-      { error: "scheduleId missing" },
-      { status: 400 }
-    );
-  }
-
-  // ✅ DO NOT decodeURIComponent here
-  const occurrenceDate = new Date(date);
+  const decoded = decodeURIComponent(date); // "2026-02-17"
+  const occurrenceDate = new Date(decoded + "T00:00:00Z"); // explicit UTC midnight
 
   if (isNaN(occurrenceDate.getTime())) {
-    return NextResponse.json(
-      { error: "Invalid date" },
-      { status: 400 }
-    );
+    return NextResponse.json({ error: "Invalid date: " + decoded }, { status: 400 });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { clerkUserId },
-    select: { id: true },
+  // Normalize to midnight UTC
+  const dateOnly = new Date(Date.UTC(
+    occurrenceDate.getUTCFullYear(),
+    occurrenceDate.getUTCMonth(),
+    occurrenceDate.getUTCDate(),
+    0, 0, 0, 0
+  ));
+
+  // Build full DateTime objects for startTime/endTime on that date
+  const [sh, sm] = startTime.split(":").map(Number);
+  const [eh, em] = endTime.split(":").map(Number);
+
+  const newStart = new Date(Date.UTC(
+    occurrenceDate.getUTCFullYear(),
+    occurrenceDate.getUTCMonth(),
+    occurrenceDate.getUTCDate(),
+    sh, sm, 0, 0
+  ));
+
+  const newEnd = new Date(Date.UTC(
+    occurrenceDate.getUTCFullYear(),
+    occurrenceDate.getUTCMonth(),
+    occurrenceDate.getUTCDate(),
+    eh, em, 0, 0
+  ));
+
+  const exception = await prisma.recurringException.upsert({
+    where: {
+      recurringScheduleId_date: {
+        recurringScheduleId: scheduleIdNum,
+        date: dateOnly,
+      },
+    },
+    update: {
+      startTime: newStart,
+      endTime: newEnd,
+    },
+    create: {
+      recurringScheduleId: scheduleIdNum,
+      date: dateOnly,
+      startTime: newStart,
+      endTime: newEnd,
+    },
   });
 
-  if (!user) return NextResponse.json({}, { status: 200 });
+  return NextResponse.json(exception);
+}
 
-  const teacher = await prisma.teacher.findUnique({
-    where: { userId: user.id },
-    select: { id: true },
-  });
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ date: string }> }
+) {
+  const { date } = await params; // ← await params here too
+  const scheduleIdNum = Number(req.nextUrl.searchParams.get("scheduleId"));
 
-  if (!teacher) return NextResponse.json({}, { status: 200 });
+  const decoded = decodeURIComponent(date);
+  const occurrenceDate = new Date(decoded);
 
-  await prisma.recurringException.create({
-    data: {
-      recurringScheduleId: Number(scheduleId),
-      date: occurrenceDate,
+  if (isNaN(occurrenceDate.getTime())) {
+    return NextResponse.json({ error: "Invalid date: " + decoded }, { status: 400 });
+  }
+
+  const dateOnly = new Date(Date.UTC(
+    occurrenceDate.getUTCFullYear(),
+    occurrenceDate.getUTCMonth(),
+    occurrenceDate.getUTCDate(),
+    0, 0, 0, 0
+  ));
+
+  await prisma.recurringException.upsert({
+    where: {
+      recurringScheduleId_date: {
+        recurringScheduleId: scheduleIdNum,
+        date: dateOnly,
+      },
+    },
+    update: {}, // already exists as a skip
+    create: {
+      recurringScheduleId: scheduleIdNum,
+      date: dateOnly,
+      // no startTime/endTime = deletion marker
     },
   });
 

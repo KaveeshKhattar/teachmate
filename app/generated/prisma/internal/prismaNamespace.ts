@@ -1215,6 +1215,8 @@ export const RecurringExceptionScalarFieldEnum = {
   id: 'id',
   recurringScheduleId: 'recurringScheduleId',
   date: 'date',
+  startTime: 'startTime',
+  endTime: 'endTime',
   createdAt: 'createdAt'
 } as const
 
