@@ -1,10 +1,10 @@
-"use client";
+// app/student/dashboard/page.tsx
+import SlotScheduler from "@/components/SlotScheduler";
 
-export default function StudentDashboard() {
-
+export default function Page() {
     return (
-        <div className="flex justify-center items-center h-screen p-4">
-            Student Dashboard....
+        <div className="mx-auto max-w-6xl p-6">
+            <SlotScheduler readOnly />
         </div>
     );
 }
