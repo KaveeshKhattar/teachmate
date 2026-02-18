@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { EditInstanceDialogBody, EditRecurringDialogBody } from "./scheduler/EditDialogs";
 import { useScheduler } from "./scheduler/useScheduler";
-import { getMonday, addDays, isSameDay, formatHeader, format12h, expandForWeek, mapDbSlotToUiSlot, minutesToTime, getDurationMinutes, DAYS, TIMES, ROW_HEIGHT, WEEK_ENUM_BY_INDEX } from "../components/scheduler/utils";
+import { getMonday, addDays, isSameDay, formatHeader, format12h, mapDbSlotToUiSlot, minutesToTime, getDurationMinutes, DAYS, TIMES, ROW_HEIGHT } from "../components/scheduler/utils";
 import { useDragSlot } from "./scheduler/useDragSlot";
 
 export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean }) {
@@ -131,7 +131,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
             setDragScopeOpen(true);
         }
     );
-
+    
     return (
         <div className="space-y-4">
             {/* toolbar */}
@@ -202,7 +202,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                 </div>
 
                 {/* body */}
-                <div className="relative h-[620px] overflow-y-auto">
+                <div className="relative max-h-[550px] overflow-y-auto">
                     <div className="grid grid-cols-[72px_repeat(7,1fr)]">
                         {TIMES.map((time) => (
                             <React.Fragment key={time}>
@@ -281,7 +281,18 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                                                 <div className="font-medium">
                                                     {isLoading ? "Saving..." : `${minutesToTime(displayStart)} – ${minutesToTime(displayEnd)}`}
                                                 </div>
-                                                <div className="opacity-80">{s.maxStudents} students</div>
+                                                <div className="opacity-80">
+                                                    {s.students.length}/{s.maxStudents} students
+                                                </div>
+                                                {s.students.length > 0 && (
+                                                    <div className="mt-1 truncate opacity-90">
+                                                        {s.students
+                                                            .slice(0, 2)
+                                                            .map((student) => student.name)
+                                                            .join(", ")}
+                                                        {s.students.length > 2 ? ` +${s.students.length - 2}` : ""}
+                                                    </div>
+                                                )}
                                             </div>
                                         );
                                     })}

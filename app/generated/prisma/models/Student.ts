@@ -31,6 +31,7 @@ export type StudentAvgAggregateOutputType = {
   userId: number | null
   teacherId: number | null
   fees: number | null
+  numOfClassesPerWeek: number | null
 }
 
 export type StudentSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type StudentSumAggregateOutputType = {
   userId: number | null
   teacherId: number | null
   fees: number | null
+  numOfClassesPerWeek: number | null
 }
 
 export type StudentMinAggregateOutputType = {
@@ -48,6 +50,7 @@ export type StudentMinAggregateOutputType = {
   school: string | null
   board: string | null
   fees: number | null
+  numOfClassesPerWeek: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +63,7 @@ export type StudentMaxAggregateOutputType = {
   school: string | null
   board: string | null
   fees: number | null
+  numOfClassesPerWeek: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +76,7 @@ export type StudentCountAggregateOutputType = {
   school: number
   board: number
   fees: number
+  numOfClassesPerWeek: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -83,6 +88,7 @@ export type StudentAvgAggregateInputType = {
   userId?: true
   teacherId?: true
   fees?: true
+  numOfClassesPerWeek?: true
 }
 
 export type StudentSumAggregateInputType = {
@@ -90,6 +96,7 @@ export type StudentSumAggregateInputType = {
   userId?: true
   teacherId?: true
   fees?: true
+  numOfClassesPerWeek?: true
 }
 
 export type StudentMinAggregateInputType = {
@@ -100,6 +107,7 @@ export type StudentMinAggregateInputType = {
   school?: true
   board?: true
   fees?: true
+  numOfClassesPerWeek?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +120,7 @@ export type StudentMaxAggregateInputType = {
   school?: true
   board?: true
   fees?: true
+  numOfClassesPerWeek?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +133,7 @@ export type StudentCountAggregateInputType = {
   school?: true
   board?: true
   fees?: true
+  numOfClassesPerWeek?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -223,6 +233,7 @@ export type StudentGroupByOutputType = {
   school: string | null
   board: string | null
   fees: number | null
+  numOfClassesPerWeek: number | null
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
@@ -258,11 +269,13 @@ export type StudentWhereInput = {
   school?: Prisma.StringNullableFilter<"Student"> | string | null
   board?: Prisma.StringNullableFilter<"Student"> | string | null
   fees?: Prisma.IntNullableFilter<"Student"> | number | null
+  numOfClassesPerWeek?: Prisma.IntNullableFilter<"Student"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   teacher?: Prisma.XOR<Prisma.TeacherScalarRelationFilter, Prisma.TeacherWhereInput>
   assignments?: Prisma.SlotAssignmentListRelationFilter
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentListRelationFilter
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -273,11 +286,13 @@ export type StudentOrderByWithRelationInput = {
   school?: Prisma.SortOrderInput | Prisma.SortOrder
   board?: Prisma.SortOrderInput | Prisma.SortOrder
   fees?: Prisma.SortOrderInput | Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   teacher?: Prisma.TeacherOrderByWithRelationInput
   assignments?: Prisma.SlotAssignmentOrderByRelationAggregateInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentOrderByRelationAggregateInput
 }
 
 export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -291,11 +306,13 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   school?: Prisma.StringNullableFilter<"Student"> | string | null
   board?: Prisma.StringNullableFilter<"Student"> | string | null
   fees?: Prisma.IntNullableFilter<"Student"> | number | null
+  numOfClassesPerWeek?: Prisma.IntNullableFilter<"Student"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   teacher?: Prisma.XOR<Prisma.TeacherScalarRelationFilter, Prisma.TeacherWhereInput>
   assignments?: Prisma.SlotAssignmentListRelationFilter
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentListRelationFilter
 }, "id" | "userId">
 
 export type StudentOrderByWithAggregationInput = {
@@ -306,6 +323,7 @@ export type StudentOrderByWithAggregationInput = {
   school?: Prisma.SortOrderInput | Prisma.SortOrder
   board?: Prisma.SortOrderInput | Prisma.SortOrder
   fees?: Prisma.SortOrderInput | Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
@@ -326,6 +344,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   school?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   board?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   fees?: Prisma.IntNullableWithAggregatesFilter<"Student"> | number | null
+  numOfClassesPerWeek?: Prisma.IntNullableWithAggregatesFilter<"Student"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
 }
@@ -335,11 +354,13 @@ export type StudentCreateInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
   teacher: Prisma.TeacherCreateNestedOneWithoutStudentInput
   assignments?: Prisma.SlotAssignmentCreateNestedManyWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -350,9 +371,11 @@ export type StudentUncheckedCreateInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.SlotAssignmentUncheckedCreateNestedManyWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUpdateInput = {
@@ -360,11 +383,13 @@ export type StudentUpdateInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
   teacher?: Prisma.TeacherUpdateOneRequiredWithoutStudentNestedInput
   assignments?: Prisma.SlotAssignmentUpdateManyWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -375,9 +400,11 @@ export type StudentUncheckedUpdateInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.SlotAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyInput = {
@@ -388,6 +415,7 @@ export type StudentCreateManyInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -397,6 +425,7 @@ export type StudentUpdateManyMutationInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -409,6 +438,7 @@ export type StudentUncheckedUpdateManyInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -426,6 +456,7 @@ export type StudentCountOrderByAggregateInput = {
   school?: Prisma.SortOrder
   board?: Prisma.SortOrder
   fees?: Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -435,6 +466,7 @@ export type StudentAvgOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   fees?: Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrder
 }
 
 export type StudentMaxOrderByAggregateInput = {
@@ -445,6 +477,7 @@ export type StudentMaxOrderByAggregateInput = {
   school?: Prisma.SortOrder
   board?: Prisma.SortOrder
   fees?: Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -457,6 +490,7 @@ export type StudentMinOrderByAggregateInput = {
   school?: Prisma.SortOrder
   board?: Prisma.SortOrder
   fees?: Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -466,6 +500,7 @@ export type StudentSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   teacherId?: Prisma.SortOrder
   fees?: Prisma.SortOrder
+  numOfClassesPerWeek?: Prisma.SortOrder
 }
 
 export type StudentListRelationFilter = {
@@ -579,15 +614,31 @@ export type StudentUpdateOneRequiredWithoutAssignmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutAssignmentsInput, Prisma.StudentUpdateWithoutAssignmentsInput>, Prisma.StudentUncheckedUpdateWithoutAssignmentsInput>
 }
 
+export type StudentCreateNestedOneWithoutRecurringDayAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutRecurringDayAssignmentsInput, Prisma.StudentUncheckedCreateWithoutRecurringDayAssignmentsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutRecurringDayAssignmentsInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutRecurringDayAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutRecurringDayAssignmentsInput, Prisma.StudentUncheckedCreateWithoutRecurringDayAssignmentsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutRecurringDayAssignmentsInput
+  upsert?: Prisma.StudentUpsertWithoutRecurringDayAssignmentsInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutRecurringDayAssignmentsInput, Prisma.StudentUpdateWithoutRecurringDayAssignmentsInput>, Prisma.StudentUncheckedUpdateWithoutRecurringDayAssignmentsInput>
+}
+
 export type StudentCreateWithoutUserInput = {
   grade?: string | null
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   teacher: Prisma.TeacherCreateNestedOneWithoutStudentInput
   assignments?: Prisma.SlotAssignmentCreateNestedManyWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutUserInput = {
@@ -597,9 +648,11 @@ export type StudentUncheckedCreateWithoutUserInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.SlotAssignmentUncheckedCreateNestedManyWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutUserInput = {
@@ -623,10 +676,12 @@ export type StudentUpdateWithoutUserInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teacher?: Prisma.TeacherUpdateOneRequiredWithoutStudentNestedInput
   assignments?: Prisma.SlotAssignmentUpdateManyWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutUserInput = {
@@ -636,9 +691,11 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.SlotAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutTeacherInput = {
@@ -646,10 +703,12 @@ export type StudentCreateWithoutTeacherInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
   assignments?: Prisma.SlotAssignmentCreateNestedManyWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutTeacherInput = {
@@ -659,9 +718,11 @@ export type StudentUncheckedCreateWithoutTeacherInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   assignments?: Prisma.SlotAssignmentUncheckedCreateNestedManyWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutTeacherInput = {
@@ -701,6 +762,7 @@ export type StudentScalarWhereInput = {
   school?: Prisma.StringNullableFilter<"Student"> | string | null
   board?: Prisma.StringNullableFilter<"Student"> | string | null
   fees?: Prisma.IntNullableFilter<"Student"> | number | null
+  numOfClassesPerWeek?: Prisma.IntNullableFilter<"Student"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
 }
@@ -710,10 +772,12 @@ export type StudentCreateWithoutAssignmentsInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStudentInput
   teacher: Prisma.TeacherCreateNestedOneWithoutStudentInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutAssignmentsInput = {
@@ -724,8 +788,10 @@ export type StudentUncheckedCreateWithoutAssignmentsInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutAssignmentsInput = {
@@ -749,10 +815,12 @@ export type StudentUpdateWithoutAssignmentsInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
   teacher?: Prisma.TeacherUpdateOneRequiredWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutAssignmentsInput = {
@@ -763,8 +831,80 @@ export type StudentUncheckedUpdateWithoutAssignmentsInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentCreateWithoutRecurringDayAssignmentsInput = {
+  grade?: string | null
+  school?: string | null
+  board?: string | null
+  fees?: number | null
+  numOfClassesPerWeek?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutStudentInput
+  teacher: Prisma.TeacherCreateNestedOneWithoutStudentInput
+  assignments?: Prisma.SlotAssignmentCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutRecurringDayAssignmentsInput = {
+  id?: number
+  userId: number
+  teacherId: number
+  grade?: string | null
+  school?: string | null
+  board?: string | null
+  fees?: number | null
+  numOfClassesPerWeek?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  assignments?: Prisma.SlotAssignmentUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutRecurringDayAssignmentsInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutRecurringDayAssignmentsInput, Prisma.StudentUncheckedCreateWithoutRecurringDayAssignmentsInput>
+}
+
+export type StudentUpsertWithoutRecurringDayAssignmentsInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutRecurringDayAssignmentsInput, Prisma.StudentUncheckedUpdateWithoutRecurringDayAssignmentsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutRecurringDayAssignmentsInput, Prisma.StudentUncheckedCreateWithoutRecurringDayAssignmentsInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutRecurringDayAssignmentsInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutRecurringDayAssignmentsInput, Prisma.StudentUncheckedUpdateWithoutRecurringDayAssignmentsInput>
+}
+
+export type StudentUpdateWithoutRecurringDayAssignmentsInput = {
+  grade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
+  teacher?: Prisma.TeacherUpdateOneRequiredWithoutStudentNestedInput
+  assignments?: Prisma.SlotAssignmentUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutRecurringDayAssignmentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  teacherId?: Prisma.IntFieldUpdateOperationsInput | number
+  grade?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  assignments?: Prisma.SlotAssignmentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyTeacherInput = {
@@ -774,6 +914,7 @@ export type StudentCreateManyTeacherInput = {
   school?: string | null
   board?: string | null
   fees?: number | null
+  numOfClassesPerWeek?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -783,10 +924,12 @@ export type StudentUpdateWithoutTeacherInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutStudentNestedInput
   assignments?: Prisma.SlotAssignmentUpdateManyWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutTeacherInput = {
@@ -796,9 +939,11 @@ export type StudentUncheckedUpdateWithoutTeacherInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   assignments?: Prisma.SlotAssignmentUncheckedUpdateManyWithoutStudentNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutTeacherInput = {
@@ -808,6 +953,7 @@ export type StudentUncheckedUpdateManyWithoutTeacherInput = {
   school?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   board?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fees?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  numOfClassesPerWeek?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -819,10 +965,12 @@ export type StudentUncheckedUpdateManyWithoutTeacherInput = {
 
 export type StudentCountOutputType = {
   assignments: number
+  recurringDayAssignments: number
 }
 
 export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   assignments?: boolean | StudentCountOutputTypeCountAssignmentsArgs
+  recurringDayAssignments?: boolean | StudentCountOutputTypeCountRecurringDayAssignmentsArgs
 }
 
 /**
@@ -842,6 +990,13 @@ export type StudentCountOutputTypeCountAssignmentsArgs<ExtArgs extends runtime.T
   where?: Prisma.SlotAssignmentWhereInput
 }
 
+/**
+ * StudentCountOutputType without action
+ */
+export type StudentCountOutputTypeCountRecurringDayAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RecurringDayAssignmentWhereInput
+}
+
 
 export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -851,11 +1006,13 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   school?: boolean
   board?: boolean
   fees?: boolean
+  numOfClassesPerWeek?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
   assignments?: boolean | Prisma.Student$assignmentsArgs<ExtArgs>
+  recurringDayAssignments?: boolean | Prisma.Student$recurringDayAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
@@ -867,6 +1024,7 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   school?: boolean
   board?: boolean
   fees?: boolean
+  numOfClassesPerWeek?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -881,6 +1039,7 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   school?: boolean
   board?: boolean
   fees?: boolean
+  numOfClassesPerWeek?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -895,15 +1054,17 @@ export type StudentSelectScalar = {
   school?: boolean
   board?: boolean
   fees?: boolean
+  numOfClassesPerWeek?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "teacherId" | "grade" | "school" | "board" | "fees" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "teacherId" | "grade" | "school" | "board" | "fees" | "numOfClassesPerWeek" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
   assignments?: boolean | Prisma.Student$assignmentsArgs<ExtArgs>
+  recurringDayAssignments?: boolean | Prisma.Student$recurringDayAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -921,6 +1082,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     user: Prisma.$UserPayload<ExtArgs>
     teacher: Prisma.$TeacherPayload<ExtArgs>
     assignments: Prisma.$SlotAssignmentPayload<ExtArgs>[]
+    recurringDayAssignments: Prisma.$RecurringDayAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -930,6 +1092,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     school: string | null
     board: string | null
     fees: number | null
+    numOfClassesPerWeek: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["student"]>
@@ -1329,6 +1492,7 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   teacher<T extends Prisma.TeacherDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TeacherDefaultArgs<ExtArgs>>): Prisma.Prisma__TeacherClient<runtime.Types.Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   assignments<T extends Prisma.Student$assignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$assignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SlotAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  recurringDayAssignments<T extends Prisma.Student$recurringDayAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$recurringDayAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecurringDayAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1365,6 +1529,7 @@ export interface StudentFieldRefs {
   readonly school: Prisma.FieldRef<"Student", 'String'>
   readonly board: Prisma.FieldRef<"Student", 'String'>
   readonly fees: Prisma.FieldRef<"Student", 'Int'>
+  readonly numOfClassesPerWeek: Prisma.FieldRef<"Student", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>
 }
@@ -1784,6 +1949,30 @@ export type Student$assignmentsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SlotAssignmentScalarFieldEnum | Prisma.SlotAssignmentScalarFieldEnum[]
+}
+
+/**
+ * Student.recurringDayAssignments
+ */
+export type Student$recurringDayAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RecurringDayAssignment
+   */
+  select?: Prisma.RecurringDayAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RecurringDayAssignment
+   */
+  omit?: Prisma.RecurringDayAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RecurringDayAssignmentInclude<ExtArgs> | null
+  where?: Prisma.RecurringDayAssignmentWhereInput
+  orderBy?: Prisma.RecurringDayAssignmentOrderByWithRelationInput | Prisma.RecurringDayAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.RecurringDayAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RecurringDayAssignmentScalarFieldEnum | Prisma.RecurringDayAssignmentScalarFieldEnum[]
 }
 
 /**

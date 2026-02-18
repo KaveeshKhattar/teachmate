@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
+import Header from "@/components/Header";
 
 type Role = "TEACHER" | "STUDENT" | "GUEST";
 
@@ -42,6 +43,7 @@ export default function Home() {
   return (
     <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-24 px-4 pb-24 pt-16 sm:px-6 md:px-8 lg:gap-32 lg:pb-32 lg:pt-24">
       {/* Hero */}
+      <Header></Header>
       <section className="grid gap-16 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-center md:gap-20">
         <div className="space-y-8">
           <p className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-100 dark:bg-emerald-900 dark:text-emerald-300 dark:ring-emerald-800">

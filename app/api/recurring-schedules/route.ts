@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from '@/lib/prisma';
 import { auth } from "@clerk/nextjs/server";
-import { Pool } from "pg";
 
 export async function GET() {
   const { userId: clerkUserId } = await auth();
@@ -19,18 +18,33 @@ export async function GET() {
     return NextResponse.json([], { status: 200 });
   }
 
-  const teacher = await prisma.teacher.findUnique({
-    where: { userId: user.id },
-    select: { id: true },
-  });
+  const [teacher, student] = await Promise.all([
+    prisma.teacher.findUnique({
+      where: { userId: user.id },
+      select: { id: true },
+    }),
+    prisma.student.findUnique({
+      where: { userId: user.id },
+      select: { teacherId: true },
+    }),
+  ]);
 
-  if (!teacher) {
+  let teacherId = teacher?.id ?? null;
+  if (!teacherId && student?.teacherId) {
+    const linkedTeacher = await prisma.teacher.findUnique({
+      where: { userId: student.teacherId },
+      select: { id: true },
+    });
+    teacherId = linkedTeacher?.id ?? null;
+  }
+
+  if (!teacherId) {
     return NextResponse.json([], { status: 200 });
   }
 
   const schedules = await prisma.recurringSchedule.findMany({
     where: {
-      teacherId: teacher.id,
+      teacherId,
     },
     include: {
       days: true,
@@ -39,6 +53,22 @@ export async function GET() {
           date: true,
           startTime: true,  // ← include these
           endTime: true,
+        },
+      },
+      recurringDayAssignments: {
+        select: {
+          day: true,
+          student: {
+            select: {
+              id: true,
+              user: {
+                select: {
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+          },
         },
       },
     },

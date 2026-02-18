@@ -63,10 +63,13 @@ model Student {
   board  String?
   fees   Int?
 
+  numOfClassesPerWeek Int?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  assignments SlotAssignment[]
+  assignments             SlotAssignment[]
+  recurringDayAssignments RecurringDayAssignment[]
 }
 
 model Teacher {
@@ -126,10 +129,11 @@ model RecurringSchedule {
 
   maxStudents Int
 
-  days RecurringDay[]
+  days       RecurringDay[]
   exceptions RecurringException[]
 
-  createdAt DateTime @default(now())
+  createdAt               DateTime                 @default(now())
+  recurringDayAssignments RecurringDayAssignment[]
 }
 
 model RecurringDay {
@@ -146,7 +150,7 @@ model RecurringException {
   recurringScheduleId Int
   recurringSchedule   RecurringSchedule @relation(fields: [recurringScheduleId], references: [id], onDelete: Cascade)
 
-  date DateTime   // the day to skip
+  date DateTime // the day to skip
 
   startTime DateTime?
   endTime   DateTime?
@@ -154,4 +158,21 @@ model RecurringException {
   createdAt DateTime @default(now())
 
   @@unique([recurringScheduleId, date])
+}
+
+model RecurringDayAssignment {
+  id Int @id @default(autoincrement())
+
+  recurringScheduleId Int
+  recurringSchedule   RecurringSchedule @relation(fields: [recurringScheduleId], references: [id], onDelete: Cascade)
+
+  day WeekDay
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id])
+
+  assignedAt DateTime @default(now())
+
+  @@unique([recurringScheduleId, day, studentId])
+  @@index([recurringScheduleId, day])
 }
