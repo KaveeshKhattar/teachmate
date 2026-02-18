@@ -392,7 +392,8 @@ export const ModelName = {
   SlotAssignment: 'SlotAssignment',
   RecurringSchedule: 'RecurringSchedule',
   RecurringDay: 'RecurringDay',
-  RecurringException: 'RecurringException'
+  RecurringException: 'RecurringException',
+  RecurringDayAssignment: 'RecurringDayAssignment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "waitlist" | "user" | "student" | "teacher" | "slot" | "slotAssignment" | "recurringSchedule" | "recurringDay" | "recurringException"
+    modelProps: "waitlist" | "user" | "student" | "teacher" | "slot" | "slotAssignment" | "recurringSchedule" | "recurringDay" | "recurringException" | "recurringDayAssignment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1079,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RecurringDayAssignment: {
+      payload: Prisma.$RecurringDayAssignmentPayload<ExtArgs>
+      fields: Prisma.RecurringDayAssignmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RecurringDayAssignmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RecurringDayAssignmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>
+        }
+        findFirst: {
+          args: Prisma.RecurringDayAssignmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RecurringDayAssignmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>
+        }
+        findMany: {
+          args: Prisma.RecurringDayAssignmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>[]
+        }
+        create: {
+          args: Prisma.RecurringDayAssignmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>
+        }
+        createMany: {
+          args: Prisma.RecurringDayAssignmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RecurringDayAssignmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>[]
+        }
+        delete: {
+          args: Prisma.RecurringDayAssignmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>
+        }
+        update: {
+          args: Prisma.RecurringDayAssignmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.RecurringDayAssignmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RecurringDayAssignmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RecurringDayAssignmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.RecurringDayAssignmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RecurringDayAssignmentPayload>
+        }
+        aggregate: {
+          args: Prisma.RecurringDayAssignmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRecurringDayAssignment>
+        }
+        groupBy: {
+          args: Prisma.RecurringDayAssignmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RecurringDayAssignmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RecurringDayAssignmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RecurringDayAssignmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1149,6 +1224,7 @@ export const StudentScalarFieldEnum = {
   school: 'school',
   board: 'board',
   fees: 'fees',
+  numOfClassesPerWeek: 'numOfClassesPerWeek',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1221,6 +1297,17 @@ export const RecurringExceptionScalarFieldEnum = {
 } as const
 
 export type RecurringExceptionScalarFieldEnum = (typeof RecurringExceptionScalarFieldEnum)[keyof typeof RecurringExceptionScalarFieldEnum]
+
+
+export const RecurringDayAssignmentScalarFieldEnum = {
+  id: 'id',
+  recurringScheduleId: 'recurringScheduleId',
+  day: 'day',
+  studentId: 'studentId',
+  assignedAt: 'assignedAt'
+} as const
+
+export type RecurringDayAssignmentScalarFieldEnum = (typeof RecurringDayAssignmentScalarFieldEnum)[keyof typeof RecurringDayAssignmentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1440,6 +1527,7 @@ export type GlobalOmitConfig = {
   recurringSchedule?: Prisma.RecurringScheduleOmit
   recurringDay?: Prisma.RecurringDayOmit
   recurringException?: Prisma.RecurringExceptionOmit
+  recurringDayAssignment?: Prisma.RecurringDayAssignmentOmit
 }
 
 /* Types for Logging */

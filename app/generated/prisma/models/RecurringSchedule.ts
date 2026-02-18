@@ -251,6 +251,7 @@ export type RecurringScheduleWhereInput = {
   teacher?: Prisma.XOR<Prisma.TeacherScalarRelationFilter, Prisma.TeacherWhereInput>
   days?: Prisma.RecurringDayListRelationFilter
   exceptions?: Prisma.RecurringExceptionListRelationFilter
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentListRelationFilter
 }
 
 export type RecurringScheduleOrderByWithRelationInput = {
@@ -265,6 +266,7 @@ export type RecurringScheduleOrderByWithRelationInput = {
   teacher?: Prisma.TeacherOrderByWithRelationInput
   days?: Prisma.RecurringDayOrderByRelationAggregateInput
   exceptions?: Prisma.RecurringExceptionOrderByRelationAggregateInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentOrderByRelationAggregateInput
 }
 
 export type RecurringScheduleWhereUniqueInput = Prisma.AtLeast<{
@@ -282,6 +284,7 @@ export type RecurringScheduleWhereUniqueInput = Prisma.AtLeast<{
   teacher?: Prisma.XOR<Prisma.TeacherScalarRelationFilter, Prisma.TeacherWhereInput>
   days?: Prisma.RecurringDayListRelationFilter
   exceptions?: Prisma.RecurringExceptionListRelationFilter
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentListRelationFilter
 }, "id">
 
 export type RecurringScheduleOrderByWithAggregationInput = {
@@ -324,6 +327,7 @@ export type RecurringScheduleCreateInput = {
   teacher: Prisma.TeacherCreateNestedOneWithoutRecurringSchedulesInput
   days?: Prisma.RecurringDayCreateNestedManyWithoutRecurringScheduleInput
   exceptions?: Prisma.RecurringExceptionCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleUncheckedCreateInput = {
@@ -337,6 +341,7 @@ export type RecurringScheduleUncheckedCreateInput = {
   createdAt?: Date | string
   days?: Prisma.RecurringDayUncheckedCreateNestedManyWithoutRecurringScheduleInput
   exceptions?: Prisma.RecurringExceptionUncheckedCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleUpdateInput = {
@@ -349,6 +354,7 @@ export type RecurringScheduleUpdateInput = {
   teacher?: Prisma.TeacherUpdateOneRequiredWithoutRecurringSchedulesNestedInput
   days?: Prisma.RecurringDayUpdateManyWithoutRecurringScheduleNestedInput
   exceptions?: Prisma.RecurringExceptionUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleUncheckedUpdateInput = {
@@ -362,6 +368,7 @@ export type RecurringScheduleUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   days?: Prisma.RecurringDayUncheckedUpdateManyWithoutRecurringScheduleNestedInput
   exceptions?: Prisma.RecurringExceptionUncheckedUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleCreateManyInput = {
@@ -529,6 +536,20 @@ export type RecurringScheduleUpdateOneRequiredWithoutExceptionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.RecurringScheduleUpdateToOneWithWhereWithoutExceptionsInput, Prisma.RecurringScheduleUpdateWithoutExceptionsInput>, Prisma.RecurringScheduleUncheckedUpdateWithoutExceptionsInput>
 }
 
+export type RecurringScheduleCreateNestedOneWithoutRecurringDayAssignmentsInput = {
+  create?: Prisma.XOR<Prisma.RecurringScheduleCreateWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUncheckedCreateWithoutRecurringDayAssignmentsInput>
+  connectOrCreate?: Prisma.RecurringScheduleCreateOrConnectWithoutRecurringDayAssignmentsInput
+  connect?: Prisma.RecurringScheduleWhereUniqueInput
+}
+
+export type RecurringScheduleUpdateOneRequiredWithoutRecurringDayAssignmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.RecurringScheduleCreateWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUncheckedCreateWithoutRecurringDayAssignmentsInput>
+  connectOrCreate?: Prisma.RecurringScheduleCreateOrConnectWithoutRecurringDayAssignmentsInput
+  upsert?: Prisma.RecurringScheduleUpsertWithoutRecurringDayAssignmentsInput
+  connect?: Prisma.RecurringScheduleWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RecurringScheduleUpdateToOneWithWhereWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUpdateWithoutRecurringDayAssignmentsInput>, Prisma.RecurringScheduleUncheckedUpdateWithoutRecurringDayAssignmentsInput>
+}
+
 export type RecurringScheduleCreateWithoutTeacherInput = {
   startTime: Date | string
   endTime: Date | string
@@ -538,6 +559,7 @@ export type RecurringScheduleCreateWithoutTeacherInput = {
   createdAt?: Date | string
   days?: Prisma.RecurringDayCreateNestedManyWithoutRecurringScheduleInput
   exceptions?: Prisma.RecurringExceptionCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleUncheckedCreateWithoutTeacherInput = {
@@ -550,6 +572,7 @@ export type RecurringScheduleUncheckedCreateWithoutTeacherInput = {
   createdAt?: Date | string
   days?: Prisma.RecurringDayUncheckedCreateNestedManyWithoutRecurringScheduleInput
   exceptions?: Prisma.RecurringExceptionUncheckedCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleCreateOrConnectWithoutTeacherInput = {
@@ -601,6 +624,7 @@ export type RecurringScheduleCreateWithoutDaysInput = {
   createdAt?: Date | string
   teacher: Prisma.TeacherCreateNestedOneWithoutRecurringSchedulesInput
   exceptions?: Prisma.RecurringExceptionCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleUncheckedCreateWithoutDaysInput = {
@@ -613,6 +637,7 @@ export type RecurringScheduleUncheckedCreateWithoutDaysInput = {
   maxStudents: number
   createdAt?: Date | string
   exceptions?: Prisma.RecurringExceptionUncheckedCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleCreateOrConnectWithoutDaysInput = {
@@ -640,6 +665,7 @@ export type RecurringScheduleUpdateWithoutDaysInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teacher?: Prisma.TeacherUpdateOneRequiredWithoutRecurringSchedulesNestedInput
   exceptions?: Prisma.RecurringExceptionUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleUncheckedUpdateWithoutDaysInput = {
@@ -652,6 +678,7 @@ export type RecurringScheduleUncheckedUpdateWithoutDaysInput = {
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   exceptions?: Prisma.RecurringExceptionUncheckedUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleCreateWithoutExceptionsInput = {
@@ -663,6 +690,7 @@ export type RecurringScheduleCreateWithoutExceptionsInput = {
   createdAt?: Date | string
   teacher: Prisma.TeacherCreateNestedOneWithoutRecurringSchedulesInput
   days?: Prisma.RecurringDayCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleUncheckedCreateWithoutExceptionsInput = {
@@ -675,6 +703,7 @@ export type RecurringScheduleUncheckedCreateWithoutExceptionsInput = {
   maxStudents: number
   createdAt?: Date | string
   days?: Prisma.RecurringDayUncheckedCreateNestedManyWithoutRecurringScheduleInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedCreateNestedManyWithoutRecurringScheduleInput
 }
 
 export type RecurringScheduleCreateOrConnectWithoutExceptionsInput = {
@@ -702,6 +731,7 @@ export type RecurringScheduleUpdateWithoutExceptionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teacher?: Prisma.TeacherUpdateOneRequiredWithoutRecurringSchedulesNestedInput
   days?: Prisma.RecurringDayUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleUncheckedUpdateWithoutExceptionsInput = {
@@ -714,6 +744,73 @@ export type RecurringScheduleUncheckedUpdateWithoutExceptionsInput = {
   maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   days?: Prisma.RecurringDayUncheckedUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutRecurringScheduleNestedInput
+}
+
+export type RecurringScheduleCreateWithoutRecurringDayAssignmentsInput = {
+  startTime: Date | string
+  endTime: Date | string
+  startDate: Date | string
+  endDate?: Date | string | null
+  maxStudents: number
+  createdAt?: Date | string
+  teacher: Prisma.TeacherCreateNestedOneWithoutRecurringSchedulesInput
+  days?: Prisma.RecurringDayCreateNestedManyWithoutRecurringScheduleInput
+  exceptions?: Prisma.RecurringExceptionCreateNestedManyWithoutRecurringScheduleInput
+}
+
+export type RecurringScheduleUncheckedCreateWithoutRecurringDayAssignmentsInput = {
+  id?: number
+  teacherId: number
+  startTime: Date | string
+  endTime: Date | string
+  startDate: Date | string
+  endDate?: Date | string | null
+  maxStudents: number
+  createdAt?: Date | string
+  days?: Prisma.RecurringDayUncheckedCreateNestedManyWithoutRecurringScheduleInput
+  exceptions?: Prisma.RecurringExceptionUncheckedCreateNestedManyWithoutRecurringScheduleInput
+}
+
+export type RecurringScheduleCreateOrConnectWithoutRecurringDayAssignmentsInput = {
+  where: Prisma.RecurringScheduleWhereUniqueInput
+  create: Prisma.XOR<Prisma.RecurringScheduleCreateWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUncheckedCreateWithoutRecurringDayAssignmentsInput>
+}
+
+export type RecurringScheduleUpsertWithoutRecurringDayAssignmentsInput = {
+  update: Prisma.XOR<Prisma.RecurringScheduleUpdateWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUncheckedUpdateWithoutRecurringDayAssignmentsInput>
+  create: Prisma.XOR<Prisma.RecurringScheduleCreateWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUncheckedCreateWithoutRecurringDayAssignmentsInput>
+  where?: Prisma.RecurringScheduleWhereInput
+}
+
+export type RecurringScheduleUpdateToOneWithWhereWithoutRecurringDayAssignmentsInput = {
+  where?: Prisma.RecurringScheduleWhereInput
+  data: Prisma.XOR<Prisma.RecurringScheduleUpdateWithoutRecurringDayAssignmentsInput, Prisma.RecurringScheduleUncheckedUpdateWithoutRecurringDayAssignmentsInput>
+}
+
+export type RecurringScheduleUpdateWithoutRecurringDayAssignmentsInput = {
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  teacher?: Prisma.TeacherUpdateOneRequiredWithoutRecurringSchedulesNestedInput
+  days?: Prisma.RecurringDayUpdateManyWithoutRecurringScheduleNestedInput
+  exceptions?: Prisma.RecurringExceptionUpdateManyWithoutRecurringScheduleNestedInput
+}
+
+export type RecurringScheduleUncheckedUpdateWithoutRecurringDayAssignmentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  teacherId?: Prisma.IntFieldUpdateOperationsInput | number
+  startTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endTime?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  maxStudents?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  days?: Prisma.RecurringDayUncheckedUpdateManyWithoutRecurringScheduleNestedInput
+  exceptions?: Prisma.RecurringExceptionUncheckedUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleCreateManyTeacherInput = {
@@ -735,6 +832,7 @@ export type RecurringScheduleUpdateWithoutTeacherInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   days?: Prisma.RecurringDayUpdateManyWithoutRecurringScheduleNestedInput
   exceptions?: Prisma.RecurringExceptionUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleUncheckedUpdateWithoutTeacherInput = {
@@ -747,6 +845,7 @@ export type RecurringScheduleUncheckedUpdateWithoutTeacherInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   days?: Prisma.RecurringDayUncheckedUpdateManyWithoutRecurringScheduleNestedInput
   exceptions?: Prisma.RecurringExceptionUncheckedUpdateManyWithoutRecurringScheduleNestedInput
+  recurringDayAssignments?: Prisma.RecurringDayAssignmentUncheckedUpdateManyWithoutRecurringScheduleNestedInput
 }
 
 export type RecurringScheduleUncheckedUpdateManyWithoutTeacherInput = {
@@ -767,11 +866,13 @@ export type RecurringScheduleUncheckedUpdateManyWithoutTeacherInput = {
 export type RecurringScheduleCountOutputType = {
   days: number
   exceptions: number
+  recurringDayAssignments: number
 }
 
 export type RecurringScheduleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   days?: boolean | RecurringScheduleCountOutputTypeCountDaysArgs
   exceptions?: boolean | RecurringScheduleCountOutputTypeCountExceptionsArgs
+  recurringDayAssignments?: boolean | RecurringScheduleCountOutputTypeCountRecurringDayAssignmentsArgs
 }
 
 /**
@@ -798,6 +899,13 @@ export type RecurringScheduleCountOutputTypeCountExceptionsArgs<ExtArgs extends 
   where?: Prisma.RecurringExceptionWhereInput
 }
 
+/**
+ * RecurringScheduleCountOutputType without action
+ */
+export type RecurringScheduleCountOutputTypeCountRecurringDayAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RecurringDayAssignmentWhereInput
+}
+
 
 export type RecurringScheduleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -811,6 +919,7 @@ export type RecurringScheduleSelect<ExtArgs extends runtime.Types.Extensions.Int
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
   days?: boolean | Prisma.RecurringSchedule$daysArgs<ExtArgs>
   exceptions?: boolean | Prisma.RecurringSchedule$exceptionsArgs<ExtArgs>
+  recurringDayAssignments?: boolean | Prisma.RecurringSchedule$recurringDayAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.RecurringScheduleCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["recurringSchedule"]>
 
@@ -854,6 +963,7 @@ export type RecurringScheduleInclude<ExtArgs extends runtime.Types.Extensions.In
   teacher?: boolean | Prisma.TeacherDefaultArgs<ExtArgs>
   days?: boolean | Prisma.RecurringSchedule$daysArgs<ExtArgs>
   exceptions?: boolean | Prisma.RecurringSchedule$exceptionsArgs<ExtArgs>
+  recurringDayAssignments?: boolean | Prisma.RecurringSchedule$recurringDayAssignmentsArgs<ExtArgs>
   _count?: boolean | Prisma.RecurringScheduleCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type RecurringScheduleIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -869,6 +979,7 @@ export type $RecurringSchedulePayload<ExtArgs extends runtime.Types.Extensions.I
     teacher: Prisma.$TeacherPayload<ExtArgs>
     days: Prisma.$RecurringDayPayload<ExtArgs>[]
     exceptions: Prisma.$RecurringExceptionPayload<ExtArgs>[]
+    recurringDayAssignments: Prisma.$RecurringDayAssignmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1276,6 +1387,7 @@ export interface Prisma__RecurringScheduleClient<T, Null = never, ExtArgs extend
   teacher<T extends Prisma.TeacherDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.TeacherDefaultArgs<ExtArgs>>): Prisma.Prisma__TeacherClient<runtime.Types.Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   days<T extends Prisma.RecurringSchedule$daysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RecurringSchedule$daysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecurringDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   exceptions<T extends Prisma.RecurringSchedule$exceptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RecurringSchedule$exceptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecurringExceptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  recurringDayAssignments<T extends Prisma.RecurringSchedule$recurringDayAssignmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RecurringSchedule$recurringDayAssignmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecurringDayAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1754,6 +1866,30 @@ export type RecurringSchedule$exceptionsArgs<ExtArgs extends runtime.Types.Exten
   take?: number
   skip?: number
   distinct?: Prisma.RecurringExceptionScalarFieldEnum | Prisma.RecurringExceptionScalarFieldEnum[]
+}
+
+/**
+ * RecurringSchedule.recurringDayAssignments
+ */
+export type RecurringSchedule$recurringDayAssignmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RecurringDayAssignment
+   */
+  select?: Prisma.RecurringDayAssignmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RecurringDayAssignment
+   */
+  omit?: Prisma.RecurringDayAssignmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RecurringDayAssignmentInclude<ExtArgs> | null
+  where?: Prisma.RecurringDayAssignmentWhereInput
+  orderBy?: Prisma.RecurringDayAssignmentOrderByWithRelationInput | Prisma.RecurringDayAssignmentOrderByWithRelationInput[]
+  cursor?: Prisma.RecurringDayAssignmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RecurringDayAssignmentScalarFieldEnum | Prisma.RecurringDayAssignmentScalarFieldEnum[]
 }
 
 /**

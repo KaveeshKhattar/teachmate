@@ -10,6 +10,7 @@ import { ClerkProvider,
 import "./globals.css";
 import Header from "@/components/Header";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,8 +44,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
+            <TooltipProvider>
             {children}
+            </TooltipProvider>
           </ThemeProvider>
         </ClerkProvider>
       </body>

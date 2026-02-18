@@ -28,4 +28,42 @@ type RecurringScheduleDTO = {
     maxStudents: number;
     days: { day: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN" }[];
     exceptions: { date: string; startTime?: string; endTime?: string }[]; // ← add these
+    recurringDayAssignments: {
+        day: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+        student: {
+            id: number;
+            user: {
+                firstName: string | null;
+                lastName: string | null;
+            };
+        };
+    }[];
+};
+
+type SlotWithAssignmentsDTO = {
+    id: number;
+    startTime: string;
+    endTime: string;
+    maxStudents: number;
+    assignments: {
+        student: {
+            id: number;
+            user: {
+                firstName: string | null;
+                lastName: string | null;
+            };
+        };
+    }[];
+};
+
+type RecurringDayAssignmentDTO = {
+    recurringScheduleId: number;
+    day: "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
+    student: {
+        id: number;
+        user: {
+            firstName: string | null;
+            lastName: string | null;
+        };
+    };
 };

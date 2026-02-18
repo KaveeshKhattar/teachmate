@@ -59,7 +59,8 @@ export const ModelName = {
   SlotAssignment: 'SlotAssignment',
   RecurringSchedule: 'RecurringSchedule',
   RecurringDay: 'RecurringDay',
-  RecurringException: 'RecurringException'
+  RecurringException: 'RecurringException',
+  RecurringDayAssignment: 'RecurringDayAssignment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -110,6 +111,7 @@ export const StudentScalarFieldEnum = {
   school: 'school',
   board: 'board',
   fees: 'fees',
+  numOfClassesPerWeek: 'numOfClassesPerWeek',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -182,6 +184,17 @@ export const RecurringExceptionScalarFieldEnum = {
 } as const
 
 export type RecurringExceptionScalarFieldEnum = (typeof RecurringExceptionScalarFieldEnum)[keyof typeof RecurringExceptionScalarFieldEnum]
+
+
+export const RecurringDayAssignmentScalarFieldEnum = {
+  id: 'id',
+  recurringScheduleId: 'recurringScheduleId',
+  day: 'day',
+  studentId: 'studentId',
+  assignedAt: 'assignedAt'
+} as const
+
+export type RecurringDayAssignmentScalarFieldEnum = (typeof RecurringDayAssignmentScalarFieldEnum)[keyof typeof RecurringDayAssignmentScalarFieldEnum]
 
 
 export const SortOrder = {

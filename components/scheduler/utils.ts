@@ -56,7 +56,7 @@ function format12h(time: string) {
 function buildTimes() {
     const t: string[] = [];
     for (let h = 0; h < 24; h++) {
-        for (let m of [0, 30]) {
+        for (const m of [0, 30]) {
             t.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`);
         }
     }
@@ -105,6 +105,22 @@ function expandForWeek(
         );
 
         const allowedDays = new Set(sch.days.map((d) => d.day));
+        const assignmentsByDay = new Map<
+            (typeof WEEK_ENUM_BY_INDEX)[number],
+            { id: number; name: string }[]
+        >();
+
+        (sch.recurringDayAssignments ?? []).forEach((assignment) => {
+            const first = assignment.student.user.firstName ?? "";
+            const last = assignment.student.user.lastName ?? "";
+            const fullName = `${first} ${last}`.trim() || "Student";
+            const current = assignmentsByDay.get(assignment.day) ?? [];
+            current.push({
+                id: assignment.student.id,
+                name: fullName,
+            });
+            assignmentsByDay.set(assignment.day, current);
+        });
 
         weekDates.forEach((date, idx) => {
             const weekdayEnum = WEEK_ENUM_BY_INDEX[idx];
@@ -142,7 +158,7 @@ function expandForWeek(
                 maxStudents: sch.maxStudents,
                 startMinutes,
                 endMinutes,
-                students: [],
+                students: assignmentsByDay.get(weekdayEnum) ?? [],
             });
         });
     }
@@ -150,7 +166,7 @@ function expandForWeek(
     return result;
 }
 
-function mapDbSlotToUiSlot(slot: any): UISlot {
+function mapDbSlotToUiSlot(slot: SlotWithAssignmentsDTO): UISlot {
     const date = new Date(slot.startTime);
 
     const dayIndex = (date.getUTCDay() + 6) % 7; // Monday=0, using UTC
@@ -168,7 +184,14 @@ function mapDbSlotToUiSlot(slot: any): UISlot {
         maxStudents: slot.maxStudents,
         startMinutes: dateToMinutes(slot.startTime),
         endMinutes: dateToMinutes(slot.endTime),
-        students: [],
+        students: slot.assignments.map((assignment) => {
+            const first = assignment.student.user.firstName ?? "";
+            const last = assignment.student.user.lastName ?? "";
+            return {
+                id: assignment.student.id,
+                name: `${first} ${last}`.trim() || "Student",
+            };
+        }),
     };
 }
 
