@@ -41,6 +41,11 @@ export function SlotCell({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
+      onClick={() => {
+        if (isDraggingActive) {
+          onDrop();
+        }
+      }}
       className={cn(
         "p-2.5 transition-all duration-150 border",
         colors.border,
@@ -99,7 +104,10 @@ export function SlotCell({
                     variant="ghost"
                     size="icon"
                     className="h-3.5 w-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 hover:bg-destructive/10 hover:text-destructive"
-                    onClick={() => onRemove(student.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemove(student.id);
+                    }}
                   >
                     <X className="h-2.5 w-2.5" />
                   </Button>

@@ -74,7 +74,7 @@ export function useDragSlot(onDrop: (slot: UISlot, newStartMinutes: number) => v
             window.addEventListener("mousemove", onMouseMove);
             window.addEventListener("mouseup", onMouseUp);
         },
-        []
+        [onDrop]
     );
 
 

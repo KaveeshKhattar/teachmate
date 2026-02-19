@@ -32,7 +32,7 @@ export function EditRecurringDialogBody({
                                         : "Sunday"
             )
         );
-    }, [schedule.id]);
+    }, [schedule]);
 
     const [startDate, setStartDate] = React.useState(
         schedule.startDate.slice(0, 10)

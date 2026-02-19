@@ -15,6 +15,7 @@ interface StudentCardProps {
   isDragging: boolean;
   onDragStart: () => void;
   onDragEnd: () => void;
+  onTouchSelect: () => void;
 }
 
 export function StudentCard({
@@ -24,6 +25,7 @@ export function StudentCard({
   isDragging,
   onDragStart,
   onDragEnd,
+  onTouchSelect,
 }: StudentCardProps) {
   const target = student.numOfClassesPerWeek ?? 0;
   const isMet = target > 0 && assignedCount >= target;
@@ -36,6 +38,11 @@ export function StudentCard({
           draggable
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
+          onPointerDown={(e) => {
+            if (e.pointerType === "touch") {
+              onTouchSelect();
+            }
+          }}
           className={cn(
             "flex items-center gap-3 p-3 cursor-grab select-none transition-all duration-150",
             "hover:shadow-md hover:border-border/80 active:cursor-grabbing",

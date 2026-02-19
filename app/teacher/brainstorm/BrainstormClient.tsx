@@ -42,6 +42,11 @@ export default function BrainstormClient({
     setDraggingStudentId(studentId);
   }, []);
 
+  const handleTouchSelect = useCallback((studentId: number) => {
+    setDraggingStudentId(studentId);
+    setDragOverKey(null);
+  }, []);
+
   const handleDragEnd = useCallback(() => {
     setDraggingStudentId(null);
     setDragOverKey(null);
@@ -172,6 +177,7 @@ export default function BrainstormClient({
         draggingStudentId={draggingStudentId}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        onTouchSelect={handleTouchSelect}
       />
       <ScheduleCalendar
         schedules={schedules}

@@ -14,6 +14,7 @@ interface StudentSidebarProps {
   draggingStudentId: number | null;
   onDragStart: (studentId: number) => void;
   onDragEnd: () => void;
+  onTouchSelect: (studentId: number) => void;
 }
 
 export function StudentSidebar({
@@ -22,6 +23,7 @@ export function StudentSidebar({
   draggingStudentId,
   onDragStart,
   onDragEnd,
+  onTouchSelect,
 }: StudentSidebarProps) {
   const fullyScheduled = students.filter((s) => {
     const count = assignedCountMap[s.id] ?? 0;
@@ -45,7 +47,7 @@ export function StudentSidebar({
           </Badge>
         </div>
         <p className="text-xs text-muted-foreground mt-2">
-          Drag a student card onto a slot in the calendar to assign them.
+          Drag a student card onto a slot, or tap a card then tap a slot on touch devices.
         </p>
       </div>
 
@@ -63,6 +65,7 @@ export function StudentSidebar({
               isDragging={draggingStudentId === student.id}
               onDragStart={() => onDragStart(student.id)}
               onDragEnd={onDragEnd}
+              onTouchSelect={() => onTouchSelect(student.id)}
             />
           ))}
         </div>
@@ -73,7 +76,7 @@ export function StudentSidebar({
       <div className="p-3 text-center">
         <p className="text-xs text-muted-foreground">
           {draggingStudentId
-            ? "✦ Drop on a slot to assign"
+            ? "Drop or tap a slot to assign"
             : "Grab a card to start assigning"}
         </p>
       </div>
