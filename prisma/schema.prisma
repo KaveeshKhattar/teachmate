@@ -70,6 +70,7 @@ model Student {
 
   assignments             SlotAssignment[]
   recurringDayAssignments RecurringDayAssignment[]
+  payments                Payment[]
 }
 
 model Teacher {
@@ -175,4 +176,22 @@ model RecurringDayAssignment {
 
   @@unique([recurringScheduleId, day, studentId])
   @@index([recurringScheduleId, day])
+}
+
+model Payment {
+  id Int @id @default(autoincrement())
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  month Int
+  year  Int
+
+  paidAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, year, month])
+  @@index([year, month])
 }

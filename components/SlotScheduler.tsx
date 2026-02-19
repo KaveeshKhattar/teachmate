@@ -20,6 +20,7 @@ import {
     AlertDialogFooter,
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { SchedulerSkeleton } from "@/components/dashboard-loading";
 import { EditInstanceDialogBody, EditRecurringDialogBody } from "./scheduler/EditDialogs";
 import { useScheduler } from "./scheduler/useScheduler";
 import { getMonday, addDays, isSameDay, formatHeader, format12h, mapDbSlotToUiSlot, minutesToTime, getDurationMinutes, DAYS, TIMES, ROW_HEIGHT } from "../components/scheduler/utils";
@@ -36,7 +37,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
     const [editOpen, setEditOpen] = React.useState(false);
     const [editInstanceOpen, setEditInstanceOpen] = React.useState(false);
 
-    const { slots, schedulesById, setSchedules, setSingleSlots } = useScheduler(weekStart);
+    const { slots, schedulesById, setSchedules, setSingleSlots, isLoading } = useScheduler(weekStart);
 
     const [loadingSlotId, setLoadingSlotId] = React.useState<string | null>(null);
     const [pendingPositions, setPendingPositions] = React.useState<Record<string, { startMinutes: number; endMinutes: number }>>({});
@@ -95,15 +96,6 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
         setPendingPositions(p => { const n = { ...p }; delete n[slotId]; return n; });
     }
 
-    React.useEffect(() => {
-        fetch(`/api/slots?weekStart=${weekStart.toISOString()}`)
-            .then(r => r.json())
-            .then((rows) => {
-                const mapped = rows.map(mapDbSlotToUiSlot);
-                setSingleSlots(mapped);
-            });
-    }, [weekStart]);
-
     const weekDays = DAYS.map((_: Day, i: number) => addDays(weekStart, i));
     const today = new Date();
 
@@ -131,11 +123,15 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
             setDragScopeOpen(true);
         }
     );
+
+    if (isLoading && slots.length === 0) {
+        return <SchedulerSkeleton />;
+    }
     
     return (
         <div className="space-y-4">
             {/* toolbar */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-1">
                     <Button
                         variant="ghost"
@@ -162,11 +158,13 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                     </div>
 
                 </div>
+                {!readOnly ? <AddSlotDialog /> : null}
 
             </div>
 
             {/* calendar */}
-            <div className="rounded-lg border overflow-hidden bg-background">
+            <div className="overflow-x-auto rounded-lg border bg-background">
+                <div className="min-w-[760px]">
                 {/* header */}
                 <div className="grid grid-cols-[72px_repeat(7,1fr)] border-b bg-muted/40">
                     <div />
@@ -244,7 +242,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                         <div className="pointer-events-none absolute inset-0 grid grid-cols-[72px_repeat(7,1fr)]">
                             <div /> {/* time gutter */}
 
-                            {DAYS.map((day, col) => (
+                            {DAYS.map((day) => (
                                 <div key={day} className="relative">
                                     {slotsByDay[day].map((s, i) => {
                                         const slotId = `${s.recurringScheduleId}-${s.date}`;
@@ -301,6 +299,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                         </div>
 
                     </div>
+                </div>
                 </div>
             </div>
 

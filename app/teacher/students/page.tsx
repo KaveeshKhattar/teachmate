@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 
 interface Student {
@@ -108,51 +109,79 @@ export default function TeacherStudentsTable() {
 
     return (
         <>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>ID</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Grade</TableHead>
-                        <TableHead>School</TableHead>
-                        <TableHead>Board</TableHead>
-                        <TableHead>Fees</TableHead>
-                        <TableHead>Classes / week</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {students.map((student) => (
-                        <TableRow key={student.id}>
-                            <TableCell>{student.id}</TableCell>
-                            <TableCell>{student.user.firstName} {student.user.lastName}</TableCell>
-                            <TableCell>{student.grade}</TableCell>
-                            <TableCell>{student.school}</TableCell>
-                            <TableCell>{student.board}</TableCell>
-                            <TableCell>{student.fees}</TableCell>
-                            <TableCell>{student.numOfClassesPerWeek}</TableCell>
-                            <TableCell>
-                                <div className="flex gap-2">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => handleEdit(student)}
-                                    >
-                                        Edit
-                                    </Button>
+            <div className="space-y-3 md:hidden">
+                {students.map((student) => (
+                    <Card key={student.id}>
+                        <CardHeader className="pb-3">
+                            <CardTitle className="text-base">
+                                {student.user.firstName} {student.user.lastName}
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2 text-sm">
+                            <p><span className="text-muted-foreground">Grade:</span> {student.grade ?? "-"}</p>
+                            <p><span className="text-muted-foreground">School:</span> {student.school ?? "-"}</p>
+                            <p><span className="text-muted-foreground">Board:</span> {student.board ?? "-"}</p>
+                            <p><span className="text-muted-foreground">Fees:</span> {student.fees ?? "-"}</p>
+                            <p><span className="text-muted-foreground">Classes/week:</span> {student.numOfClassesPerWeek ?? "-"}</p>
+                            <div className="flex gap-2 pt-2">
+                                <Button size="sm" variant="outline" onClick={() => handleEdit(student)}>
+                                    Edit
+                                </Button>
+                                <Button size="sm" variant="destructive" onClick={() => handleDelete(student.id)}>
+                                    Delete
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
 
-                                    <Button size="sm" variant="destructive" onClick={() => handleDelete(student.id)}>
-                                        Delete
-                                    </Button>
-                                </div>
-                            </TableCell>
+            <div className="hidden overflow-x-auto rounded-lg border md:block">
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>ID</TableHead>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Grade</TableHead>
+                            <TableHead>School</TableHead>
+                            <TableHead>Board</TableHead>
+                            <TableHead>Fees</TableHead>
+                            <TableHead>Classes / week</TableHead>
+                            <TableHead>Actions</TableHead>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHeader>
+                    <TableBody>
+                        {students.map((student) => (
+                            <TableRow key={student.id}>
+                                <TableCell>{student.id}</TableCell>
+                                <TableCell>{student.user.firstName} {student.user.lastName}</TableCell>
+                                <TableCell>{student.grade}</TableCell>
+                                <TableCell>{student.school}</TableCell>
+                                <TableCell>{student.board}</TableCell>
+                                <TableCell>{student.fees}</TableCell>
+                                <TableCell>{student.numOfClassesPerWeek}</TableCell>
+                                <TableCell>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            onClick={() => handleEdit(student)}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button size="sm" variant="destructive" onClick={() => handleDelete(student.id)}>
+                                            Delete
+                                        </Button>
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </div>
 
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
+                <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle>Edit student</DialogTitle>
                     </DialogHeader>

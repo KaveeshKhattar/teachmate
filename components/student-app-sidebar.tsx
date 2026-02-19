@@ -1,6 +1,6 @@
-import * as React from "react"
-import { GraduationCap } from "lucide-react"
-
+import * as React from "react";
+import Link from "next/link";
+import { BookOpenCheck, CircleUserRound, Wallet, GraduationCap } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -10,52 +10,43 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
+} from "@/components/ui/sidebar";
 
-// This is sample data.
 const data = {
   navMain: [
     {
-      title: "Your Students",
-      url: "/teacher/students",
+      title: "View Classes",
+      url: "/student/dashboard",
+      icon: BookOpenCheck,
     },
-    {
-      title: "Create a Schedule",
-      url: "/teacher/brainstorm",
-    },
-    {
-      title: "View your schedule",
-      url: "/teacher/dashboard",
-    },
-    // {
-    //   title: "Chats (Coming Soon)",
-    //   url: "/teacher/chats",
-    // },
     {
       title: "Payments",
-      url: "/teacher/payments",
+      url: "/student/payments",
+      icon: Wallet,
     },
     {
       title: "Profile",
-      url: "/teacher/profile",
+      url: "/student/profile",
+      icon: CircleUserRound,
     },
   ],
-}
+};
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function StudentAppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href={"/teacher"}>
+              <Link href="/student">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <GraduationCap className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-medium">TeamFinder</span>
+                  <span className="font-medium">TeachMate Student</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -68,9 +59,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             {data.navMain.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton asChild>
-                  <a href={item.url} className="font-medium">
-                    {item.title}
-                  </a>
+                  <Link href={item.url} className="font-medium">
+                    <item.icon className="size-4" />
+                    <span>{item.title}</span>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -79,5 +71,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

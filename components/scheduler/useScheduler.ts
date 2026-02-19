@@ -5,26 +5,32 @@ export function useScheduler(weekStart: Date) {
     const [schedules, setSchedules] = React.useState<RecurringScheduleDTO[]>([]);
     const [recurringAssignments, setRecurringAssignments] = React.useState<RecurringDayAssignmentDTO[]>([]);
     const [singleSlots, setSingleSlots] = React.useState<UISlot[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
 
-    function reloadAll() {
-        fetch("/api/recurring-schedules")
-            .then((r) => r.json())
-            .then(setSchedules);
+    const reloadAll = React.useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const [nextSchedules, nextAssignments, nextSlots] = await Promise.all([
+                fetch("/api/recurring-schedules").then((r) => r.json()),
+                fetch("/api/recurring-day-assignments").then((r) => r.json()),
+                fetch(`/api/slots?weekStart=${weekStart.toISOString()}`)
+                    .then((r) => r.json())
+                    .then((rows) => rows.map(mapDbSlotToUiSlot)),
+            ]);
 
-        fetch("/api/recurring-day-assignments")
-            .then((r) => r.json())
-            .then(setRecurringAssignments);
-
-        fetch(`/api/slots?weekStart=${weekStart.toISOString()}`)
-            .then(r => r.json())
-            .then(rows => setSingleSlots(rows.map(mapDbSlotToUiSlot)));
-    }
+            setSchedules(nextSchedules);
+            setRecurringAssignments(nextAssignments);
+            setSingleSlots(nextSlots);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [weekStart]);
 
     React.useEffect(() => {
-        reloadAll();
+        void reloadAll();
         window.addEventListener("schedule-created", reloadAll);
         return () => window.removeEventListener("schedule-created", reloadAll);
-    }, [weekStart]);
+    }, [reloadAll]);
 
     const slots = React.useMemo(() => {
         const recurringSlots = expandForWeek(schedules, weekStart);
@@ -66,5 +72,5 @@ export function useScheduler(weekStart: Date) {
         [schedules]
     );
 
-    return { slots, schedules, schedulesById, setSchedules, setSingleSlots, reloadAll };
+    return { slots, schedules, schedulesById, setSchedules, setSingleSlots, reloadAll, isLoading };
 }

@@ -61,6 +61,8 @@ export default function UnSafePage() {
     const [value, setValue] = useState<string>("");
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [saving, setSaving] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const handleSetRole = (value: string) => {
         setRole(value);
@@ -96,6 +98,24 @@ export default function UnSafePage() {
     }, []);
 
     const handleUpdate = async () => {
+        setErrorMessage("");
+
+        if (!user) {
+            setErrorMessage("Please sign in and try again.");
+            return;
+        }
+
+        if (role !== "STUDENT" && role !== "TEACHER") {
+            setErrorMessage("Please select a role.");
+            return;
+        }
+
+        if (role === "STUDENT" && !value) {
+            setErrorMessage("Please select a teacher.");
+            return;
+        }
+
+        setSaving(true);
         const metadata: Record<string, string | number> = {};
 
         // Add additional fields for students if role is "STUDENT"
@@ -110,27 +130,24 @@ export default function UnSafePage() {
             metadata.role = "TEACHER";
         }
 
-        await user
-            ?.update({
+        try {
+            await user.update({
                 unsafeMetadata: metadata,
             })
             .then(() => {
                 console.log("User updated with unsafe metadata");
-            })
-            .catch((err: Error) => {
-                console.error("Error updating user:", err);
             });
 
-            await fetch("/api/profile", {
+            const profileRes = await fetch("/api/profile", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                  clerkUserId: user?.id,
+                  clerkUserId: user.id,
                   role: metadata.role,
-                  email: user?.emailAddresses?.[0]?.emailAddress,
-                  firstName: user?.firstName,
-                  lastName: user?.lastName,
-                  imageUrl: user?.imageUrl,
+                  email: user.emailAddresses?.[0]?.emailAddress,
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  imageUrl: user.imageUrl,
                   grade: metadata.grade,
                   school: metadata.school,
                   board: metadata.board,
@@ -139,13 +156,30 @@ export default function UnSafePage() {
                 }),
               });
 
+            if (!profileRes.ok) {
+                const payload = await profileRes.json().catch(() => null);
+                const apiError = payload?.error ?? "Could not save profile details.";
+                const detailText =
+                    payload?.details && typeof payload.details === "object"
+                        ? ` ${JSON.stringify(payload.details)}`
+                        : "";
+                throw new Error(`${apiError}${detailText}`);
+            }
 
-        router.push(role === "STUDENT" ? "/student/dashboard" : "/teacher/dashboard");
+            router.push(role === "STUDENT" ? "/student/dashboard" : "/teacher/dashboard");
+        } catch (err) {
+            console.error("Onboarding save error:", err);
+            setErrorMessage(
+                err instanceof Error ? err.message : "Failed to save onboarding details."
+            );
+        } finally {
+            setSaving(false);
+        }
     };
 
     return (
-        <div className="flex justify-center items-center h-screen p-4">
-            <Card className="w-[350px]">
+        <div className="flex min-h-screen items-center justify-center p-3 sm:p-4">
+            <Card className="w-full max-w-md">
                 <CardHeader>
                     <CardTitle>Add Additional Fields to Profile</CardTitle>
                     <CardDescription>
@@ -157,7 +191,7 @@ export default function UnSafePage() {
                         <div className="flex flex-col space-y-1.5">
                             <Label htmlFor="framework">Role</Label>
                             <Select onValueChange={handleSetRole}>
-                                <SelectTrigger className="w-[180px]">
+                                <SelectTrigger className="w-full">
                                     <SelectValue placeholder="Select a Role" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -195,7 +229,7 @@ export default function UnSafePage() {
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="framework">Board</Label>
                                     <Select onValueChange={handleSetBoard}>
-                                        <SelectTrigger className="w-[180px]">
+                                        <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select a Board" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -226,7 +260,7 @@ export default function UnSafePage() {
                                                 variant="outline"
                                                 role="combobox"
                                                 aria-expanded={open}
-                                                className="w-[200px] justify-between"
+                                                className="w-full justify-between"
                                             >
                                                 {value ? (
                                                     <div className="flex items-center">
@@ -269,7 +303,7 @@ export default function UnSafePage() {
                                                 <ChevronsUpDown className="opacity-50" />
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-[250px] p-0">
+                                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] min-w-[250px] p-0">
                                             <Command>
                                                 <CommandInput
                                                     placeholder="Search teacher..."
@@ -319,7 +353,14 @@ export default function UnSafePage() {
                     </form>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                    <Button onClick={handleUpdate} disabled={loading}>{loading ? "Loading..." : "Save Changes"}</Button>
+                    <div className="space-y-2">
+                        {errorMessage ? (
+                            <p className="text-sm text-destructive">{errorMessage}</p>
+                        ) : null}
+                        <Button onClick={handleUpdate} disabled={loading || saving}>
+                            {loading ? "Loading..." : saving ? "Saving..." : "Save Changes"}
+                        </Button>
+                    </div>
                 </CardFooter>
             </Card>
         </div>

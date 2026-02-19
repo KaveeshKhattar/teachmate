@@ -89,3 +89,8 @@ export type RecurringException = Prisma.RecurringExceptionModel
  * 
  */
 export type RecurringDayAssignment = Prisma.RecurringDayAssignmentModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
