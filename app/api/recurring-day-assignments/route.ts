@@ -93,7 +93,10 @@ export async function POST(req: Request) {
       include: { days: { select: { day: true } } },
     }),
     prisma.student.findFirst({
-      where: { id: studentId, teacherId },
+      where: {
+        id: studentId,
+        teacher: { id: teacherId },
+      },
       select: { id: true },
     }),
   ]);
@@ -159,7 +162,10 @@ export async function DELETE(req: Request) {
       select: { id: true },
     }),
     prisma.student.findFirst({
-      where: { id: studentId, teacherId },
+      where: {
+        id: studentId,
+        teacher: { id: teacherId },
+      },
       select: { id: true },
     }),
   ]);
