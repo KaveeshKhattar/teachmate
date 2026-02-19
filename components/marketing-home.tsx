@@ -1,0 +1,232 @@
+"use client";
+
+import { useUser, useClerk } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useRef } from "react";
+import { useRouter } from "next/navigation";
+import Header from "@/components/Header";
+
+type Role = "TEACHER" | "STUDENT" | "GUEST";
+
+function getRole(user: ReturnType<typeof useUser>["user"]): Role {
+  if (!user) return "GUEST";
+  const role = user.unsafeMetadata?.role ?? user.unsafeMetadata?.ROLE;
+  if (role === "TEACHER" || role === "STUDENT") return role;
+  return "GUEST";
+}
+
+export default function MarketingHome() {
+  const { user, isSignedIn } = useUser();
+  const role = getRole(user);
+  const router = useRouter();
+
+  const heroSubtitle =
+    role === "TEACHER"
+      ? "TeachMate keeps your tuition timetable organised so you can spend your energy on teaching, not admin."
+      : role === "STUDENT"
+        ? "A calm view of all your lessons in one place, so you can focus on learning, not chasing times."
+        : "A tuition-first schedule hub for teachers, parents, and students who want clarity without the chaos.";
+
+  const howItWorksRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToSection = () => {
+    howItWorksRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const { openSignIn } = useClerk();
+
+  return (
+    <>
+      <Header />
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-16 px-4 pb-16 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12 lg:gap-24 lg:pb-24 lg:pt-16">
+        <section className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-center md:gap-14">
+          <div className="space-y-8">
+            <p className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-100 dark:bg-emerald-900 dark:text-emerald-300 dark:ring-emerald-800">
+              Less management. More studying.
+            </p>
+            <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
+              Tuition schedules that feel calm, not chaotic.
+            </h1>
+            <p className="max-w-xl text-sm text-muted-foreground md:text-base">
+              {heroSubtitle}
+            </p>
+
+            <div className="flex flex-wrap gap-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  if (!isSignedIn) {
+                    openSignIn({
+                      redirectUrl: "/",
+                    });
+                  } else {
+                    router.push("/");
+                  }
+                }}
+              >
+                {isSignedIn ? "Open workspace" : "Sign in to continue"}
+              </Button>
+
+              <Button onClick={scrollToSection}>See how it works</Button>
+            </div>
+
+            <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+              <div>
+                <span className="font-medium text-emerald-700">10x</span> fewer
+                back-and-forth messages on lesson times.
+              </div>
+              <div>
+                <span className="font-medium text-emerald-700">1 place</span> for
+                teachers, parents, and students to stay in sync.
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-br from-emerald-100/60 via-emerald-50 to-sky-50 dark:via-emerald-500 dark:to-sky-500 blur-2xl" />
+            <div className="rounded-2xl border bg-card p-5 shadow-sm sm:p-6">
+              <div className="mb-3 flex items-center justify-between text-xs text-muted-foreground">
+                <span className="font-medium text-foreground">
+                  Weekly tuition view
+                </span>
+                <span>Always in sync</span>
+              </div>
+              <div className="grid grid-cols-4 gap-2 text-[11px]">
+                <div className="space-y-2">
+                  <p className="text-muted-foreground">Mon</p>
+                  <div className="h-16 rounded-lg bg-emerald-50 px-2 py-1 dark:bg-emerald-900">
+                    <p className="truncate text-[11px] font-medium">Physics</p>
+                    <p className="text-[10px] text-emerald-700 dark:text-green-200">
+                      4:00 - 5:30 PM
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-muted-foreground">Tue</p>
+                  <div className="h-16 rounded-lg bg-sky-50 px-2 py-1 dark:bg-blue-900">
+                    <p className="truncate text-[11px] font-medium">Algebra</p>
+                    <p className="text-[10px] text-sky-700 dark:text-sky-200">
+                      7:00 - 8:00 PM
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-muted-foreground">Wed</p>
+                  <div className="h-16 rounded-lg bg-sky-50 px-2 py-1 dark:bg-blue-900">
+                    <p className="truncate text-[11px] font-medium">Chemistry</p>
+                    <p className="text-[10px] text-sky-700 dark:text-sky-200">
+                      5:00 - 6:00 PM
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-muted-foreground">Thu</p>
+                  <div className="h-16 rounded-lg bg-sky-50 px-2 py-1 dark:bg-emerald-900">
+                    <p className="truncate text-[11px] font-medium">English</p>
+                    <p className="text-[10px] dark:text-green-200">
+                      3:30 - 5:00 PM
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between rounded-lg bg-muted px-3 py-2 text-[11px] text-muted-foreground">
+                <div>
+                  <p className="font-medium text-foreground">
+                    Designed for tuition.
+                  </p>
+                  <p>Block out admin and keep the focus on learning time.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid gap-8 md:grid-cols-2 md:gap-10">
+          <div className="rounded-xl border bg-card p-6 shadow-sm sm:p-8">
+            <p className="text-xs font-medium uppercase tracking-wide text-emerald-700">
+              For tutors
+            </p>
+            <h2 className="mt-4 text-base font-semibold sm:text-lg">
+              Set schedules.
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Set schedules without wrestling with managing schedules every week.
+              Add or change times without having to share the schedule manually.
+            </p>
+          </div>
+
+          <div className="rounded-xl border bg-card p-6 shadow-sm sm:p-8">
+            <p className="text-xs font-medium uppercase tracking-wide text-sky-700">
+              For students & parents
+            </p>
+            <h2 className="mt-4 text-base font-semibold sm:text-lg">
+              No more &ldquo;what time is class?&rdquo; texts.
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Everyone sees the same up-to-date timetable, so you can focus on
+              revision, not rescheduling. Check the calendar on your phone before
+              you leave.
+            </p>
+          </div>
+        </section>
+
+        <section className="border-t border-border pt-14 sm:pt-16 md:pt-20">
+          <div className="mx-auto mb-16 max-w-2xl text-center" ref={howItWorksRef}>
+            <h2 className="text-2xl font-semibold sm:text-3xl">
+              Simple to set up. Easy to use.
+            </h2>
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
+              Create a schedule and everyone stays in sync.
+            </p>
+          </div>
+          <div className="grid gap-12 sm:grid-cols-2 sm:gap-8">
+            <div className="space-y-4 text-center">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-700 dark:bg-emerald-900">
+                1
+              </span>
+              <h3 className="text-base font-semibold">Add your lessons</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Enter slots for each day. <br />
+                One-off or recurring.
+              </p>
+            </div>
+            <div className="space-y-4 text-center">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 font-semibold text-emerald-700 dark:bg-emerald-900">
+                2
+              </span>
+              <h3 className="text-base font-semibold">Everyone stays updated</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Change a time or add a class. <br />
+                Everyone sees it right away. No emails or group chats.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <footer className="border-t border-border pt-10 sm:pt-12">
+          <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
+            <p className="text-xl font-semibold">TeachMate</p>
+            <nav className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+              <Link href="/launch" className="transition-colors hover:text-foreground">
+                Get started
+              </Link>
+              <Link href="/" className="transition-colors hover:text-foreground">
+                About
+              </Link>
+              <Link href="/" className="transition-colors hover:text-foreground">
+                Contact
+              </Link>
+            </nav>
+          </div>
+          <p className="mt-12 text-center text-xs text-muted-foreground">
+            © {new Date().getFullYear()} TeachMate. All rights reserved.
+          </p>
+        </footer>
+      </main>
+    </>
+  );
+}

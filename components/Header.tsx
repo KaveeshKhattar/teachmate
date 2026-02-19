@@ -15,8 +15,7 @@ import { ModeToggle } from "./modeTogggle";
 export default function Header() {
   const { user } = useUser();
   const role = user?.unsafeMetadata?.role ?? user?.unsafeMetadata?.ROLE;
-  const workspaceHref =
-    role === "TEACHER" ? "/teacher" : role === "STUDENT" ? "/student" : "/onboarding";
+  const workspaceHref = role === "TEACHER" ? "/teacher" : role === "STUDENT" ? "/student" : "/onboarding";
 
   return (
     <header className="border-b">
@@ -48,9 +47,9 @@ export default function Header() {
               <Button asChild size="sm" variant="outline" className="min-w-0 flex-1 sm:flex-none">
                 <Link href={workspaceHref} className="truncate">
                   {role === "TEACHER"
-                    ? "Teacher Home"
+                    ? "Open Workspace"
                     : role === "STUDENT"
-                      ? "Student Home"
+                      ? "Open Workspace"
                       : "Complete Setup"}
                 </Link>
               </Button>
