@@ -1,14 +1,32 @@
-import { PrismaClient } from '../app/generated/prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from "../app/generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient }
-const adapter = new PrismaPg({ connectionString: process.env.DIRECT_URL })
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter })
+const connectionString = process.env.DATABASE_URL ?? process.env.DIRECT_URL;
 
-if (process.env.NODE_ENV !== 'production') {
-    globalForPrisma.prisma = prisma
+if (!connectionString) {
+  throw new Error(
+    "Missing DATABASE_URL (or DIRECT_URL fallback) environment variable for Prisma runtime client."
+  );
 }
 
-// const prisma = new PrismaClient({ adapter })
+const poolMaxRaw = Number(process.env.PGPOOL_MAX ?? "1");
+const poolMax = Number.isFinite(poolMaxRaw) && poolMaxRaw > 0 ? poolMaxRaw : 1;
+
+const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+
+function createPrismaClient() {
+  const adapter = new PrismaPg({
+    connectionString,
+    max: poolMax,
+  });
+
+  return new PrismaClient({ adapter });
+}
+
+const prisma = globalForPrisma.prisma ?? createPrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = prisma;
+}
 
 export default prisma;
