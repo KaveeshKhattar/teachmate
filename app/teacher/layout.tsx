@@ -41,7 +41,7 @@ export default async function TeacherLayout({
             <Separator orientation="vertical" className="mr-2 h-4" />
           </div>
         </header>
-        <div className="flex flex-1 min-h-0 flex-col gap-4 p-4">
+        <div className="flex min-h-0 flex-1 flex-col gap-4 p-3 sm:p-4">
           {children}
         </div>
       </SidebarInset>

@@ -3,7 +3,7 @@
 import { useUser, useClerk } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 
@@ -11,14 +11,26 @@ type Role = "TEACHER" | "STUDENT" | "GUEST";
 
 function getRole(user: ReturnType<typeof useUser>["user"]): Role {
   if (!user) return "GUEST";
-  const role = user.unsafeMetadata?.role;
+  const role = user.unsafeMetadata?.role ?? user.unsafeMetadata?.ROLE;
   if (role === "TEACHER" || role === "STUDENT") return role;
   return "GUEST";
 }
 
 export default function Home() {
-  const { user } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const role = getRole(user);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
+    if (role === "TEACHER") {
+      router.replace("/teacher");
+      return;
+    }
+    if (role === "STUDENT") {
+      router.replace("/student");
+    }
+  }, [isLoaded, isSignedIn, role, router]);
 
   const heroSubtitle =
     role === "TEACHER"
@@ -36,20 +48,24 @@ export default function Home() {
     });
   };
 
-  const { isSignedIn } = useUser();
   const { openSignIn } = useClerk();
-  const router = useRouter();
+
+  if (isLoaded && isSignedIn && (role === "TEACHER" || role === "STUDENT")) {
+    return null;
+  }
 
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-24 px-4 pb-24 pt-16 sm:px-6 md:px-8 lg:gap-32 lg:pb-32 lg:pt-24">
+    <>
+    <Header></Header>
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-16 px-4 pb-16 pt-8 sm:px-6 sm:pt-10 md:px-8 md:pt-12 lg:gap-24 lg:pb-24 lg:pt-16">
       {/* Hero */}
-      <Header></Header>
-      <section className="grid gap-16 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-center md:gap-20">
+      
+      <section className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:items-center md:gap-14">
         <div className="space-y-8">
           <p className="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-emerald-100 dark:bg-emerald-900 dark:text-emerald-300 dark:ring-emerald-800">
             Less management. More studying.
           </p>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-5xl">
+          <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">
             Tuition schedules that feel calm, not chaotic.
           </h1>
           <p className="max-w-xl text-sm text-muted-foreground md:text-base">
@@ -62,14 +78,14 @@ export default function Home() {
               onClick={() => {
                 if (!isSignedIn) {
                   openSignIn({
-                    redirectUrl: "/calendar",
+                    redirectUrl: "/",
                   });
                 } else {
-                  router.push("/calendar");
+                  router.push(role === "TEACHER" ? "/teacher" : "/student");
                 }
               }}
             >
-              {isSignedIn ? "View calendar" : "Sign in to view calendar"}
+              {isSignedIn ? "Open workspace" : "Sign in to continue"}
             </Button>
 
             <Button onClick={scrollToSection}>
@@ -181,7 +197,7 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section className="border-t border-border pt-24">
+      <section className="border-t border-border pt-14 sm:pt-16 md:pt-20">
         <div className="text-center max-w-2xl mx-auto mb-16" ref={howItWorksRef}>
           <h2 className="text-2xl font-semibold sm:text-3xl">
             Simple to set up. Easy to use.
@@ -211,7 +227,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border pt-16">
+      <footer className="border-t border-border pt-10 sm:pt-12">
         <div className="flex flex-col items-center gap-8 sm:flex-row sm:justify-between">
           <p className="text-xl font-semibold">TeachMate</p>
           <nav className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
@@ -225,5 +241,6 @@ export default function Home() {
         </p>
       </footer>
     </main>
+    </>
   );
 }

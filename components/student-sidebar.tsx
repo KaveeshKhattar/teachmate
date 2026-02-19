@@ -29,7 +29,7 @@ export function StudentSidebar({
   }).length;
 
   return (
-    <div className="w-72 flex flex-col border-r bg-muted/20 flex-shrink-0">
+    <div className="w-full shrink-0 border-b bg-muted/20 lg:w-72 lg:border-r lg:border-b-0">
       {/* Header */}
       <div className="p-5 pb-4">
         <div className="flex items-center gap-2 mb-1">
@@ -52,7 +52,7 @@ export function StudentSidebar({
       <Separator />
 
       {/* Student list */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="max-h-[40vh] lg:max-h-none lg:flex-1">
         <div className="p-3 space-y-2">
           {students.map((student, index) => (
             <StudentCard

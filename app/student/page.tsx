@@ -2,26 +2,26 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function Page() {
+export default function StudentHomePage() {
   return (
     <div className="space-y-4">
       <Card className="overflow-hidden border-primary/20">
         <CardHeader className="">
-          <CardTitle className="text-2xl">Teacher Workspace</CardTitle>
+          <CardTitle className="text-2xl">Student Workspace</CardTitle>
           <CardDescription>
-            Keep classes, students, and monthly collections organized from one place.
+            Check class schedule, mark monthly payment, and keep profile details updated.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="flex flex-wrap gap-2">
-            <Button asChild variant="outline">
-              <Link href="/teacher/students">Manage Students</Link>
-            </Button>
             <Button asChild>
-              <Link href="/teacher/dashboard">View Schedule</Link>
+              <Link href="/student/dashboard">View Classes</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/teacher/payments">Open Payments</Link>
+              <Link href="/student/payments">Open Payments</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/student/profile">View Profile</Link>
             </Button>
           </div>
         </CardContent>
@@ -30,24 +30,12 @@ export default function Page() {
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">Students</CardTitle>
-            <CardDescription>Update fees and class load per student.</CardDescription>
+            <CardTitle className="text-base">View Classes</CardTitle>
+            <CardDescription>Stay on top of your weekly tuition slots.</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild variant="secondary" className="w-full">
-              <Link href="/teacher/students">Go to students</Link>
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Schedule Builder</CardTitle>
-            <CardDescription>Create recurring time slots quickly.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild variant="secondary" className="w-full">
-              <Link href="/teacher/brainstorm">Create schedule</Link>
+              <Link href="/student/dashboard">Open classes</Link>
             </Button>
           </CardContent>
         </Card>
@@ -55,11 +43,23 @@ export default function Page() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Payments</CardTitle>
-            <CardDescription>See who has paid for the month.</CardDescription>
+            <CardDescription>Mark your current month as paid in one click.</CardDescription>
           </CardHeader>
           <CardContent>
             <Button asChild variant="secondary" className="w-full">
-              <Link href="/teacher/payments">Review payments</Link>
+              <Link href="/student/payments">Mark payment</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Profile</CardTitle>
+            <CardDescription>Review your account and role information.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild variant="secondary" className="w-full">
+              <Link href="/student/profile">Open profile</Link>
             </Button>
           </CardContent>
         </Card>
