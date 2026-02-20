@@ -1,40 +1,31 @@
 // app/api/students/route.ts
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
+import { getTeacherIdFromAuth } from "@/lib/get-teacher-id-from-auth";
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url);
-  const clerkUserId = searchParams.get("clerkUserId"); // from Clerk
-
-  if (!clerkUserId) {
-    return NextResponse.json({ error: "Missing clerkUserId" }, { status: 400 });
+export async function GET() {
+  const teacherId = await getTeacherIdFromAuth();
+  if (!teacherId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // 1️⃣ Get User.id from clerkUserId
-  const user = await prisma.user.findUnique({
-    where: { clerkUserId },
-  });
-
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  }
-
-  // 2️⃣ Get Teacher by user.id
-  const teacher = await prisma.teacher.findUnique({
-    where: { userId: user.id },
+  const students = await prisma.student.findMany({
+    where: {
+      teacher: {
+        id: teacherId,
+      },
+    },
     include: {
-      Student: {
-        include: {
-          user: true, // get student's email, firstName, lastName
+      user: {
+        select: {
+          email: true,
+          firstName: true,
+          lastName: true,
         },
       },
     },
+    orderBy: { id: "asc" },
   });
 
-  if (!teacher) {
-    return NextResponse.json({ error: "Teacher record not found" }, { status: 404 });
-  }
-
-  // 3️⃣ Return all students for this teacher
-  return NextResponse.json(teacher.Student);
+  return NextResponse.json(students);
 }

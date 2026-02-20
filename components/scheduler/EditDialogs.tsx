@@ -9,10 +9,12 @@ import { DAYS } from "./utils";
 export function EditRecurringDialogBody({
     slot,
     schedule,
+    onSaved,
     onClose,
 }: {
     slot: UISlot;
     schedule: RecurringScheduleDTO;
+    onSaved?: () => void | Promise<void>;
     onClose: () => void;
 }) {
 
@@ -72,7 +74,7 @@ export function EditRecurringDialogBody({
             }),
         });
 
-        window.dispatchEvent(new Event("schedule-created"));
+        await onSaved?.();
         setLoading(false);
         onClose();
     }
@@ -167,9 +169,11 @@ export function EditRecurringDialogBody({
 
 export function EditInstanceDialogBody({
     slot,
+    onSaved,
     onClose,
 }: {
     slot: UISlot;
+    onSaved?: () => void | Promise<void>;
     onClose: () => void;
 }) {
     const [startTime, setStartTime] = React.useState(slot.startTime);
@@ -191,7 +195,7 @@ export function EditInstanceDialogBody({
             }
         );
 
-        window.dispatchEvent(new Event("schedule-created"));
+        await onSaved?.();
         setLoading(false);
         onClose();
     }

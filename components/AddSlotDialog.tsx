@@ -32,7 +32,11 @@ type Day = (typeof DAYS)[number];
 
 
 
-export default function AddSlotDialog() {
+export default function AddSlotDialog({
+  onCreated,
+}: {
+  onCreated?: () => void | Promise<void>;
+}) {
   const [open, setOpen] = React.useState(false);
   const [startDate, setStartDate] = React.useState("");
   const [endDate, setEndDate] = React.useState("");
@@ -94,7 +98,7 @@ export default function AddSlotDialog() {
       maxStudents,
     });
 
-    window.dispatchEvent(new Event("schedule-created"));
+    await onCreated?.();
     setOpen(false);
     setStartTime("");
     setEndTime("");

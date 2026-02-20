@@ -1,4 +1,4 @@
-import type { WeekDay } from "@/app/generated/prisma/enums";
+import type { WeekDay } from "@/generated/prisma/enums";
 
 export type { WeekDay };
 

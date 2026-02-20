@@ -23,7 +23,7 @@ import {
 import { SchedulerSkeleton } from "@/components/dashboard-loading";
 import { EditInstanceDialogBody, EditRecurringDialogBody } from "./scheduler/EditDialogs";
 import { useScheduler } from "./scheduler/useScheduler";
-import { getMonday, addDays, isSameDay, formatHeader, format12h, mapDbSlotToUiSlot, minutesToTime, getDurationMinutes, DAYS, TIMES, ROW_HEIGHT } from "../components/scheduler/utils";
+import { getMonday, addDays, isSameDay, formatHeader, format12h, minutesToTime, getDurationMinutes, DAYS, TIMES, ROW_HEIGHT } from "../components/scheduler/utils";
 import { useDragSlot } from "./scheduler/useDragSlot";
 
 export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean }) {
@@ -37,7 +37,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
     const [editOpen, setEditOpen] = React.useState(false);
     const [editInstanceOpen, setEditInstanceOpen] = React.useState(false);
 
-    const { slots, schedulesById, setSchedules, setSingleSlots, isLoading } = useScheduler(weekStart);
+    const { slots, schedulesById, updateSchedules, reloadAll, isLoading } = useScheduler(weekStart);
 
     const [loadingSlotId, setLoadingSlotId] = React.useState<string | null>(null);
     const [pendingPositions, setPendingPositions] = React.useState<Record<string, { startMinutes: number; endMinutes: number }>>({});
@@ -46,6 +46,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
         newStartMinutes: number;
     } | null>(null);
     const [dragScopeOpen, setDragScopeOpen] = React.useState(false);
+    const [dragError, setDragError] = React.useState<string | null>(null);
 
     async function applyDrag(scope: "instance" | "all") {
         if (!pendingDrag) return;
@@ -54,7 +55,14 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
         const duration = slot.endMinutes - slot.startMinutes;
         const newStart = minutesToTime(newStartMinutes);
         const newEnd = minutesToTime(newStartMinutes + duration);
+        const targetSchedule = schedulesById[slot.recurringScheduleId];
 
+        if (!targetSchedule) {
+            setDragError("Unable to find this schedule. Please refresh and try again.");
+            return;
+        }
+
+        setDragError(null);
         setPendingPositions(p => ({
             ...p,
             [slotId]: { startMinutes: newStartMinutes, endMinutes: newStartMinutes + duration }
@@ -63,37 +71,78 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
         setDragScopeOpen(false);
         setPendingDrag(null);
 
-        if (scope === "instance") {
-            await fetch(
-                `/api/recurring-schedules/occurrence/${encodeURIComponent(slot.date)}?scheduleId=${slot.recurringScheduleId}`,
-                {
+        try {
+            if (scope === "instance") {
+                const response = await fetch(
+                    `/api/recurring-schedules/occurrence/${encodeURIComponent(slot.date)}?scheduleId=${slot.recurringScheduleId}`,
+                    {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ startTime: newStart, endTime: newEnd }),
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to update this occurrence");
+                }
+
+                const updatedException = await response.json();
+                const normalizedDateKey = new Date(updatedException.date).toISOString().slice(0, 10);
+
+                updateSchedules((current) =>
+                    current.map((schedule) => {
+                        if (schedule.id !== slot.recurringScheduleId) return schedule;
+
+                        const existingExceptions = schedule.exceptions ?? [];
+                        const remaining = existingExceptions.filter(
+                            (exception) =>
+                                new Date(exception.date).toISOString().slice(0, 10) !== normalizedDateKey
+                        );
+
+                        return {
+                            ...schedule,
+                            exceptions: [...remaining, updatedException],
+                        };
+                    })
+                );
+            } else {
+                const response = await fetch("/api/recurring-schedules", {
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ startTime: newStart, endTime: newEnd }),
+                    body: JSON.stringify({
+                        scheduleId: slot.recurringScheduleId,
+                        startTime: newStart,
+                        endTime: newEnd,
+                        startDate: targetSchedule.startDate.slice(0, 10),
+                        days: targetSchedule.days.map(d => d.day),
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to update this recurring schedule");
                 }
-            );
-        } else {
-            await fetch("/api/recurring-schedules", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    scheduleId: slot.recurringScheduleId,
-                    startTime: newStart,
-                    endTime: newEnd,
-                    // need to preserve existing days/startDate — get from schedulesById
-                    startDate: schedulesById[slot.recurringScheduleId].startDate.slice(0, 10),
-                    days: schedulesById[slot.recurringScheduleId].days.map(d => d.day),
-                }),
-            });
+
+                const scheduleDate = targetSchedule.startDate.slice(0, 10);
+
+                updateSchedules((current) =>
+                    current.map((schedule) => {
+                        if (schedule.id !== slot.recurringScheduleId) return schedule;
+
+                        return {
+                            ...schedule,
+                            startTime: new Date(`${scheduleDate}T${newStart}:00Z`).toISOString(),
+                            endTime: new Date(`${scheduleDate}T${newEnd}:00Z`).toISOString(),
+                        };
+                    })
+                );
+            }
+        } catch (error) {
+            console.error("Failed to apply drag update", error);
+            setDragError("Could not save this change. The slot was restored.");
+        } finally {
+            setLoadingSlotId(null);
+            setPendingPositions(p => { const n = { ...p }; delete n[slotId]; return n; });
         }
-
-        await Promise.all([
-            fetch("/api/recurring-schedules").then(r => r.json()).then(setSchedules),
-            fetch(`/api/slots?weekStart=${weekStart.toISOString()}`).then(r => r.json()).then(rows => setSingleSlots(rows.map(mapDbSlotToUiSlot)))
-        ]);
-
-        setLoadingSlotId(null);
-        setPendingPositions(p => { const n = { ...p }; delete n[slotId]; return n; });
     }
 
     const weekDays = DAYS.map((_: Day, i: number) => addDays(weekStart, i));
@@ -158,9 +207,12 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                     </div>
 
                 </div>
-                {!readOnly ? <AddSlotDialog /> : null}
+                {!readOnly ? <AddSlotDialog onCreated={reloadAll} /> : null}
 
             </div>
+            {dragError ? (
+                <p className="text-sm text-destructive">{dragError}</p>
+            ) : null}
 
             {/* calendar */}
             <div className="overflow-x-auto rounded-lg border bg-background">
@@ -428,8 +480,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
 
                                         setDeleteOpen(false);
                                         setSelectedSlot(null);
-
-                                        window.dispatchEvent(new Event("schedule-created"));
+                                        await reloadAll();
                                     }}
                                 >
                                     Just this one
@@ -448,8 +499,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
 
                                         setDeleteOpen(false);
                                         setSelectedSlot(null);
-
-                                        window.dispatchEvent(new Event("schedule-created"));
+                                        await reloadAll();
                                     }}
                                 >
                                     Delete all
@@ -464,6 +514,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                             {selectedSlot && (
                                 <EditRecurringDialogBody slot={selectedSlot}
                                     schedule={schedulesById[selectedSlot.recurringScheduleId]}
+                                    onSaved={reloadAll}
                                     onClose={() => setEditOpen(false)}
                                 />
 
@@ -479,6 +530,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                             {selectedSlot && (
                                 <EditInstanceDialogBody
                                     slot={selectedSlot}
+                                    onSaved={reloadAll}
                                     onClose={() => setEditInstanceOpen(false)}
                                 />
                             )}
