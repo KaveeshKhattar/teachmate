@@ -80,6 +80,9 @@ export function SlotCell({
       <div className="space-y-1">
         {assignedStudents.map((student) => {
           const idx = allStudents.findIndex((s) => s.id === student.id);
+          const firstName = student.user.firstName ?? "";
+          const lastName = student.user.lastName ?? "";
+          const fullName = `${firstName} ${lastName}`.trim() || "Student";
           return (
             <Tooltip key={student.id}>
               <TooltipTrigger asChild>
@@ -98,7 +101,7 @@ export function SlotCell({
                     {getInitials(student)}
                   </div>
                   <span className="text-[11px] font-medium flex-1 truncate">
-                    {student.user.firstName}
+                    {fullName}
                   </span>
                   <Button
                     variant="ghost"
@@ -114,7 +117,7 @@ export function SlotCell({
                 </div>
               </TooltipTrigger>
               <TooltipContent>
-                <p>{student.user.firstName} {student.user.lastName}</p>
+                <p>{fullName}</p>
                 <p className="text-xs text-muted-foreground">Click × to unassign</p>
               </TooltipContent>
             </Tooltip>

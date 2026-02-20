@@ -30,6 +30,9 @@ export function StudentCard({
   const target = student.numOfClassesPerWeek ?? 0;
   const isMet = target > 0 && assignedCount >= target;
   const isOver = target > 0 && assignedCount > target;
+  const firstName = student.user.firstName ?? "";
+  const lastName = student.user.lastName ?? "";
+  const fullName = `${firstName} ${lastName}`.trim() || "Student";
 
   return (
     <Tooltip>
@@ -65,7 +68,7 @@ export function StudentCard({
           {/* Info */}
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold truncate">
-              {student.user.firstName} {student.user.lastName}
+              {fullName}
             </p>
             <p className="text-xs text-muted-foreground truncate">
               {student.grade} · {student.school}
@@ -86,7 +89,7 @@ export function StudentCard({
         </Card>
       </TooltipTrigger>
       <TooltipContent side="right">
-        <p className="font-medium">{student.user.firstName} {student.user.lastName}</p>
+        <p className="font-medium">{fullName}</p>
         <p className="text-xs text-muted-foreground">{student.school} · Grade {student.grade}</p>
         <p className="text-xs mt-1">{assignedCount} of {target || "?"} weekly slots assigned</p>
       </TooltipContent>
