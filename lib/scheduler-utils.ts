@@ -33,7 +33,9 @@ export const AVATAR_COLORS = [
 ];
 
 export function getInitials(student: Student): string {
-  return `${student.user.firstName[0]}${student.user.lastName[0]}`;
+  const firstInitial = student.user.firstName?.trim()?.[0] ?? "";
+  const lastInitial = student.user.lastName?.trim()?.[0] ?? "";
+  return (firstInitial + lastInitial).toUpperCase() || "S";
 }
 
 export function getAvatarColor(index: number): string {
