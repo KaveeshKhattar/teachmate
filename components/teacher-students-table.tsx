@@ -45,6 +45,8 @@ export default function TeacherStudentsTable({
     const [fees, setFees] = useState("");
     const [classesPerWeek, setClassesPerWeek] = useState("");
     const [error, setError] = useState<string | null>(null);
+    const getStudentName = (student: TeacherStudent) =>
+        [student.user.firstName, student.user.lastName].filter(Boolean).join(" ").trim() || "Student";
 
     const handleDelete = async (studentId: number) => {
         if (!confirm("Are you sure you want to delete this student?")) return;
@@ -98,7 +100,7 @@ export default function TeacherStudentsTable({
                     <Card key={student.id}>
                         <CardHeader className="pb-3">
                             <CardTitle className="text-base">
-                                {student.user.firstName} {student.user.lastName}
+                                {getStudentName(student)}
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-2 text-sm">
@@ -138,7 +140,7 @@ export default function TeacherStudentsTable({
                         {students.map((student) => (
                             <TableRow key={student.id}>
                                 <TableCell>{student.id}</TableCell>
-                                <TableCell>{student.user.firstName} {student.user.lastName}</TableCell>
+                                <TableCell>{getStudentName(student)}</TableCell>
                                 <TableCell>{student.grade}</TableCell>
                                 <TableCell>{student.school}</TableCell>
                                 <TableCell>{student.board}</TableCell>

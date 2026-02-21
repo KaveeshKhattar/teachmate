@@ -42,8 +42,8 @@ import { useRouter } from 'next/navigation'
 interface Teacher {
     user: {
         id: number;
-        firstName: string;
-        lastName: string;
+        firstName?: string | null;
+        lastName?: string | null;
         imageUrl: string;
     };
 }
@@ -63,6 +63,11 @@ export default function UnSafePage() {
     const [loading, setLoading] = useState<boolean>(false);
     const [saving, setSaving] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const selectedTeacher = teachers.find((teacher) => teacher.user.id.toString() === value);
+    const selectedTeacherName = [selectedTeacher?.user.firstName, selectedTeacher?.user.lastName]
+        .filter(Boolean)
+        .join(" ")
+        .trim() || "Teacher";
 
     const handleSetRole = (value: string) => {
         setRole(value);
@@ -265,36 +270,13 @@ export default function UnSafePage() {
                                                 {value ? (
                                                     <div className="flex items-center">
                                                         <Image
-                                                            src={
-                                                                teachers.find(
-                                                                    (teacher) =>
-                                                                        teacher.user.id.toString() === value
-                                                                )?.user.imageUrl || ""
-                                                            }
-                                                            alt={
-                                                                teachers.find(
-                                                                    (teacher) =>
-                                                                        teacher.user.id.toString() === value
-                                                                )?.user.firstName || "Teacher"
-                                                            }
+                                                            src={selectedTeacher?.user.imageUrl || ""}
+                                                            alt={selectedTeacherName}
                                                             width={20}
                                                             height={20}
                                                             className="mr-2"
                                                         />
-                                                        <span>
-                                                            {
-                                                                teachers.find(
-                                                                    (teacher) =>
-                                                                        teacher.user.id.toString() === value
-                                                                )?.user.firstName
-                                                            }{" "}
-                                                            {
-                                                                teachers.find(
-                                                                    (teacher) =>
-                                                                        teacher.user.id.toString() === value
-                                                                )?.user.lastName
-                                                            }
-                                                        </span>
+                                                        <span>{selectedTeacherName}</span>
                                                     </div>
                                                 ) : (
                                                     "Select teacher..."
@@ -327,11 +309,14 @@ export default function UnSafePage() {
                                                                 {/* Display teacher's name */}
                                                                 <Image
                                                                     src={teacher.user.imageUrl}
-                                                                    alt={teacher.user.firstName}
+                                                                    alt={teacher.user.firstName ?? "Teacher"}
                                                                     width={20}
                                                                     height={20}
                                                                 />
-                                                                {`${teacher.user.firstName} ${teacher.user.lastName}`}
+                                                                {[teacher.user.firstName, teacher.user.lastName]
+                                                                    .filter(Boolean)
+                                                                    .join(" ")
+                                                                    .trim() || "Teacher"}
                                                                 <Check
                                                                     className={cn(
                                                                         "ml-auto",
