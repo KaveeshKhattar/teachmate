@@ -174,6 +174,25 @@ export default function MarketingHome() {
           </div>
         </section>
 
+        <section className="border-t border-border pt-12 pb-4 text-center sm:pt-16 sm:pb-6 md:pt-20 md:pb-8">
+          <div className="grid gap-10 sm:grid-cols-2 sm:gap-12">
+            <div>
+              <h2 className="mb-2 text-4xl font-semibold sm:mb-3 sm:text-5xl lg:text-6xl">
+                15+
+              </h2>
+              <p className="text-sm text-muted-foreground sm:text-base">Users</p>
+            </div>
+            <div>
+              <h2 className="mb-2 text-4xl font-semibold sm:mb-3 sm:text-5xl lg:text-6xl">
+                160+
+              </h2>
+              <p className="text-sm text-muted-foreground sm:text-base">
+                Classes Created &amp; Tracked
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="border-t border-border pt-14 sm:pt-16 md:pt-20">
           <div className="mx-auto mb-16 max-w-2xl text-center" ref={howItWorksRef}>
             <h2 className="text-2xl font-semibold sm:text-3xl">
