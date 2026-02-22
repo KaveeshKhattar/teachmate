@@ -4,6 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import AddSlotDialog from "./AddSlotDialog";
+import { Badge } from "@/components/ui/badge";
 
 import {
     Dialog,
@@ -365,83 +366,84 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                 }}
             >
 
-                <DialogContent className="sm:max-w-[420px]">
+                <DialogContent className="sm:max-w-[520px]">
                     {selectedSlot && (
                         <>
                             <DialogHeader>
-                                <DialogTitle>Slot details</DialogTitle>
+                                <DialogTitle className="flex items-center gap-2">
+                                    Slot details
+                                    <Badge variant="outline">{selectedSlot.day}</Badge>
+                                </DialogTitle>
                             </DialogHeader>
 
-                            <div className="space-y-3 text-sm">
-
-                                <div>
-                                    <div className="text-muted-foreground">Date</div>
-                                    <div>
-                                        {new Date(selectedSlot.date).toLocaleDateString()}
+                            <div className="space-y-4 text-sm">
+                                <div className="grid gap-2 sm:grid-cols-3">
+                                    <div className="rounded-md border bg-muted/30 p-2">
+                                        <p className="text-xs text-muted-foreground">Date</p>
+                                        <p className="font-medium">
+                                            {new Date(selectedSlot.date).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-md border bg-muted/30 p-2">
+                                        <p className="text-xs text-muted-foreground">Time</p>
+                                        <p className="font-medium">
+                                            {selectedSlot.startTime} – {selectedSlot.endTime}
+                                        </p>
+                                    </div>
+                                    <div className="rounded-md border bg-muted/30 p-2">
+                                        <p className="text-xs text-muted-foreground">Duration</p>
+                                        <p className="font-medium">
+                                            {getDurationMinutes(
+                                                selectedSlot.startTime,
+                                                selectedSlot.endTime
+                                            )} minutes
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div>
-                                    <div className="text-muted-foreground">Time</div>
-                                    <div>
-                                        {selectedSlot.startTime} – {selectedSlot.endTime}
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="text-muted-foreground">Duration</div>
-                                    <div>
-                                        {getDurationMinutes(
-                                            selectedSlot.startTime,
-                                            selectedSlot.endTime
-                                        )} minutes
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="text-muted-foreground">
-                                        Students assigned
+                                <div className="rounded-md border p-3">
+                                    <div className="mb-2 flex items-center justify-between">
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            Students assigned
+                                        </p>
+                                        <Badge variant="secondary">
+                                            {selectedSlot.students.length}/{selectedSlot.maxStudents}
+                                        </Badge>
                                     </div>
 
                                     {selectedSlot.students.length === 0 ? (
-                                        <div className="text-muted-foreground italic">
+                                        <p className="text-sm italic text-muted-foreground">
                                             No students assigned
-                                        </div>
+                                        </p>
                                     ) : (
-                                        <ul className="list-disc pl-4">
+                                        <div className="flex max-h-36 flex-wrap gap-1.5 overflow-y-auto pr-1">
                                             {selectedSlot.students.map((s) => (
-                                                <li key={s.id}>{s.name}</li>
+                                                <Badge key={s.id} variant="outline" className="rounded-full px-2 py-1">
+                                                    {s.name}
+                                                </Badge>
                                             ))}
-                                        </ul>
+                                        </div>
                                     )}
-                                </div>
-
-                                <div>
-                                    <div className="text-muted-foreground">Capacity</div>
-                                    <div>
-                                        {selectedSlot.students.length} /{" "}
-                                        {selectedSlot.maxStudents}
-                                    </div>
                                 </div>
                             </div>
                         </>
                     )}
 
                     {!readOnly && (
-                        <>
+                        <div className="grid gap-2 sm:grid-cols-3">
                             <Button
                                 variant="secondary"
                                 className="dark:bg-white dark:text-black bg-black text-white"
                                 onClick={() => setEditInstanceOpen(true)}
                             >
-                                Edit Slot
+                                Edit this slot
                             </Button>
 
                             <Button
                                 variant="secondary"
                                 onClick={() => setEditOpen(true)}
                             >
-                                Edit schedule
+                                Edit recurring
                             </Button>
 
                             <Button
@@ -450,7 +452,7 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                             >
                                 Delete
                             </Button>
-                        </>
+                        </div>
                     )}
 
 
