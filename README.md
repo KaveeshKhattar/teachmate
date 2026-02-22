@@ -83,6 +83,11 @@ pnpm install
 2. Configure environment variables (`.env`):
 - Clerk keys
 - Database connection strings (`DIRECT_URL`, etc.)
+- Scheduler AI parsing (optional):
+  - `SCHEDULER_AI_PROVIDER=openai|huggingface`
+  - `OPENAI_API_KEY=...` (if using OpenAI)
+  - `HF_TOKEN=...` (if using Hugging Face)
+  - `HUGGINGFACE_MODEL=meta-llama/Llama-3.1-8B-Instruct:novita` (optional override)
 
 3. Generate Prisma client:
 

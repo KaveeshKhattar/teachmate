@@ -36,6 +36,8 @@ import { getAvatarColor } from "@/lib/scheduler-utils";
 
 type SchedulePlanApiResponse = {
   parser: "ai-sdk" | "fallback" | "direct-constraints";
+  parserReason?: string | null;
+  aiProviderUsed?: "openai" | "huggingface" | null;
   plan: SchedulerPlanResult;
 };
 
@@ -59,6 +61,15 @@ type PlannerStudent = {
   };
 };
 
+type AISchedulerView = "create" | "adjust" | "both";
+const AI_PROMPT_EXAMPLES = [
+  "Keep Friday off and rebalance classes this week.",
+  "Cancel Thursday classes and reassign to Saturday.",
+  "Move Monday classes to Friday.",
+  "Cancel today's classes and reassign to tomorrow.",
+  "Reassign classes to Saturday, same board and same grade.",
+] as const;
+
 function InfoHint({ text }: { text: string }) {
   return (
     <Tooltip>
@@ -78,7 +89,7 @@ function InfoHint({ text }: { text: string }) {
   );
 }
 
-export default function AISchedulerClient() {
+export default function AISchedulerClient({ view = "both" }: { view?: AISchedulerView }) {
   const router = useRouter();
   const [plannerDaysPerWeek, setPlannerDaysPerWeek] = useState("5");
   const [plannerHoursPerClass, setPlannerHoursPerClass] = useState("1");
@@ -86,6 +97,7 @@ export default function AISchedulerClient() {
   const [plannerStudentsPerClass, setPlannerStudentsPerClass] = useState("3");
   const [plannerBoardMode, setPlannerBoardMode] = useState<"same" | "mixed">("same");
   const [plannerGradeMode, setPlannerGradeMode] = useState<"same" | "mixed">("same");
+  const [plannerInstruction, setPlannerInstruction] = useState("");
   const [isPlanning, setIsPlanning] = useState(false);
   const [isApplyingPlan, setIsApplyingPlan] = useState(false);
   const [plannerResult, setPlannerResult] = useState<SchedulePlanApiResponse | null>(null);
@@ -93,6 +105,14 @@ export default function AISchedulerClient() {
   const [confirmApplyOpen, setConfirmApplyOpen] = useState(false);
   const [confirmCreateSlotsOpen, setConfirmCreateSlotsOpen] = useState(false);
   const [missingSlotDetails, setMissingSlotDetails] = useState<string[]>([]);
+  const showCreate = view !== "adjust";
+  const showAdjust = view !== "create";
+  const showBoth = showCreate && showAdjust;
+  const pageTitle = showBoth
+    ? "AI Scheduler"
+    : showCreate
+      ? "Create Schedule"
+      : "AI Schedule Adjust";
 
   useEffect(() => {
     let cancelled = false;
@@ -134,20 +154,29 @@ export default function AISchedulerClient() {
     return Math.max(1, Math.round(daysPerWeekValue));
   }, [daysPerWeekValue]);
 
-  const generatedPrompt = useMemo(() => {
-    return [
+  const generatedBasePrompt = useMemo(
+    () =>
+      [
       "Create a schedule for Math.",
       `${plannerDaysPerWeek} days/week, up to ${plannerClassesPerDay} classes/day, ${plannerHoursPerClass} hours/class, ${plannerStudentsPerClass} students/class.`,
       `${plannerBoardMode === "same" ? "same board" : "mixed board"}, ${plannerGradeMode === "same" ? "same grade" : "mixed grade"}.`,
-    ].join(" ");
-  }, [
-    plannerDaysPerWeek,
-    plannerHoursPerClass,
-    plannerClassesPerDay,
-    plannerStudentsPerClass,
-    plannerBoardMode,
-    plannerGradeMode,
-  ]);
+      ].join(" "),
+    [
+      plannerDaysPerWeek,
+      plannerHoursPerClass,
+      plannerClassesPerDay,
+      plannerStudentsPerClass,
+      plannerBoardMode,
+      plannerGradeMode,
+    ]
+  );
+
+  const generatedAiPrompt = useMemo(() => {
+    const instruction = plannerInstruction.trim();
+    if (instruction.length === 0) return generatedBasePrompt;
+
+    return `${generatedBasePrompt} Additional instruction: ${instruction}`;
+  }, [generatedBasePrompt, plannerInstruction]);
 
   const generatedConstraints = useMemo(
     () => ({
@@ -171,7 +200,7 @@ export default function AISchedulerClient() {
     ]
   );
 
-  const handleGeneratePlan = useCallback(async () => {
+  const handleGenerateGreedyPlan = useCallback(async () => {
     if (!Number.isFinite(hoursPerClassValue) || hoursPerClassValue <= 0) {
       toast.error("Set hours/class");
       return;
@@ -183,7 +212,6 @@ export default function AISchedulerClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: generatedPrompt,
           constraints: generatedConstraints,
         }),
       });
@@ -199,13 +227,53 @@ export default function AISchedulerClient() {
       }
 
       setPlannerResult(payload);
-      toast.success("AI schedule generated");
+      toast.success("Schedule generated");
     } catch {
       toast.error("Network error while generating schedule");
     } finally {
       setIsPlanning(false);
     }
-  }, [generatedConstraints, generatedPrompt, hoursPerClassValue]);
+  }, [generatedConstraints, hoursPerClassValue]);
+
+  const handleGenerateAiAdjustmentPlan = useCallback(async () => {
+    if (!Number.isFinite(hoursPerClassValue) || hoursPerClassValue <= 0) {
+      toast.error("Set hours/class");
+      return;
+    }
+    if (plannerInstruction.trim().length === 0) {
+      toast.error("Enter an adjustment instruction");
+      return;
+    }
+
+    setIsPlanning(true);
+    try {
+      const res = await fetch("/api/schedule/plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: generatedAiPrompt,
+          constraints: generatedConstraints,
+        }),
+      });
+
+      const payload = (await res.json().catch(() => null)) as
+        | SchedulePlanApiResponse
+        | { error?: string }
+        | null;
+
+      if (!res.ok || !payload || !("plan" in payload)) {
+        toast.error((payload && "error" in payload && payload.error) || "Could not adjust schedule");
+        return;
+      }
+
+      setPlannerResult(payload);
+      toast.success("AI-adjusted schedule generated");
+    } catch {
+      toast.error("Network error while adjusting schedule");
+    } finally {
+      setIsPlanning(false);
+    }
+  }, [generatedAiPrompt, generatedConstraints, hoursPerClassValue, plannerInstruction]);
 
   const handleApplyPlan = useCallback(async () => {
     if (!plannerResult?.plan) {
@@ -338,7 +406,7 @@ export default function AISchedulerClient() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirm apply?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will replace current recurring assignments with the generated AI plan.
+              This will replace current recurring assignments with the generated plan.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -362,13 +430,21 @@ export default function AISchedulerClient() {
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-base">
             <Sparkles className="h-4 w-4 text-amber-500" />
-            AI Scheduler
+            {pageTitle}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="rounded-md border p-3 text-sm">
-            <p className="mb-2 text-xs font-medium text-muted-foreground">Prompt Builder</p>
-            <div className="flex flex-wrap items-center gap-2 leading-relaxed">
+          <div className={`grid gap-3 ${showBoth ? "lg:grid-cols-2" : "lg:grid-cols-1"}`}>
+            {showCreate ? (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">{showBoth ? "1) Create Schedule" : "Create Schedule"}</CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  Uses deterministic constraints from dropdowns.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <div className="flex flex-wrap items-center gap-2 leading-relaxed">
               <span>Create a schedule for</span>
               <Select value={plannerDaysPerWeek} onValueChange={setPlannerDaysPerWeek}>
                 <SelectTrigger className="w-[88px]">
@@ -462,18 +538,68 @@ export default function AISchedulerClient() {
               </Select>
               <InfoHint text="Choose same grade to avoid mixing different grades in one class." />
               <span>students together.</span>
-            </div>
-          </div>
+                </div>
+                {showCreate ? (
+                  <div>
+                    <Button onClick={handleGenerateGreedyPlan} disabled={isPlanning}>
+                      {isPlanning ? "Generating..." : "Generate Schedule"}
+                    </Button>
+                  </div>
+                ) : null}
+                <div className="rounded-md border bg-muted/20 p-3">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">AI Prompt Overview</p>
+                  <p className="text-sm">{generatedBasePrompt}</p>
+                </div>
+              </CardContent>
+            </Card>
+            ) : null}
 
-          <div className="rounded-md border bg-muted/20 p-3">
-            <p className="mb-1 text-xs font-medium text-muted-foreground">Generated Prompt</p>
-            <p className="text-sm">{generatedPrompt}</p>
+            {showAdjust ? (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm">{showBoth ? "2) Adjust Schedule (AI)" : "Adjust Schedule (AI)"}</CardTitle>
+                <p className="text-xs text-muted-foreground">
+                  Use natural language to rebalance while keeping dropdown constraints as the base.
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <textarea
+                  value={plannerInstruction}
+                  onChange={(event) => setPlannerInstruction(event.target.value)}
+                  placeholder="Example: Keep Friday as an off day and rebalance those classes to other days this week."
+                  className="min-h-20 w-full resize-y rounded-md border bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                />
+                <div className="rounded-md border bg-muted/20 p-3">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">Possible prompts</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {AI_PROMPT_EXAMPLES.map((example) => (
+                      <button
+                        key={example}
+                        type="button"
+                        onClick={() => setPlannerInstruction(example)}
+                        className="inline-flex"
+                      >
+                        <Badge
+                          variant="secondary"
+                          className="cursor-pointer rounded-full px-2.5 py-1 text-[11px] hover:bg-secondary/80"
+                        >
+                          {example}
+                        </Badge>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <Button onClick={handleGenerateAiAdjustmentPlan} disabled={isPlanning}>
+                    {isPlanning ? "Generating..." : "Generate AI-Adjusted Schedule"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            ) : null}
           </div>
 
           <div className="flex items-center gap-2">
-            <Button onClick={handleGeneratePlan} disabled={isPlanning}>
-              {isPlanning ? "Generating..." : "Generate AI Schedule"}
-            </Button>
             <Button
               variant="outline"
               onClick={() => setConfirmApplyOpen(true)}
@@ -482,7 +608,15 @@ export default function AISchedulerClient() {
               {isApplyingPlan ? "Applying..." : "Apply Plan"}
             </Button>
             {plannerResult ? (
-              <span className="text-xs text-muted-foreground">Parser: {plannerResult.parser}</span>
+              <div className="text-xs text-muted-foreground">
+                <p>Parser: {plannerResult.parser}</p>
+                {plannerResult.aiProviderUsed ? (
+                  <p>Provider: {plannerResult.aiProviderUsed}</p>
+                ) : null}
+                {plannerResult.parserReason ? (
+                  <p>{plannerResult.parserReason}</p>
+                ) : null}
+              </div>
             ) : null}
           </div>
 

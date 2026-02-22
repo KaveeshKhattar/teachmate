@@ -304,6 +304,9 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                                         const pending = pendingPositions[slotId];
                                         const displayStart = isDragging ? dragState!.startMinutes : pending ? pending.startMinutes : s.startMinutes;
                                         const displayEnd = isDragging ? dragState!.endMinutes : pending ? pending.endMinutes : s.endMinutes;
+                                        const fillRatio = Math.min(1, s.students.length / Math.max(1, s.maxStudents));
+                                        const isNearCapacity = fillRatio >= 0.8;
+                                        const isFull = s.students.length >= s.maxStudents;
 
                                         const top = (displayStart / 30) * ROW_HEIGHT;
                                         const height = ((displayEnd - displayStart) / 30) * ROW_HEIGHT;
@@ -320,30 +323,43 @@ export default function SlotScheduler({ readOnly = false }: { readOnly?: boolean
                                                     setSelectedSlot(s);
                                                 }}
                                                 className={[
-                                                    "absolute left-1 right-1 rounded-md px-1 py-0.5",
-                                                    "text-[10px] text-primary-foreground shadow-sm",
-                                                    "pointer-events-auto cursor-grab",
+                                                    "absolute left-1 right-1 rounded-md border px-1.5 py-1",
+                                                    "text-[10px] shadow-sm transition-colors",
+                                                    "pointer-events-auto",
+                                                    readOnly ? "cursor-pointer" : "cursor-grab",
                                                     isDragging
-                                                        ? "bg-primary/60 opacity-80 cursor-grabbing"
-                                                        : "bg-primary/90",
+                                                        ? "bg-primary/25 border-primary/40 text-foreground opacity-90 cursor-grabbing"
+                                                        : isNearCapacity
+                                                            ? "bg-amber-500/15 border-amber-500/40 text-foreground"
+                                                            : "bg-primary/15 border-primary/35 text-foreground",
                                                 ].join(" ")}
                                                 style={{ top, height }}
                                             >
-                                                <div className="font-medium">
+                                                <div className="mb-1 flex items-center justify-between gap-1">
+                                                    <div className="font-semibold tracking-tight">
                                                     {isLoading ? "Saving..." : `${minutesToTime(displayStart)} – ${minutesToTime(displayEnd)}`}
-                                                </div>
-                                                <div className="opacity-80">
-                                                    {s.students.length}/{s.maxStudents} students
-                                                </div>
-                                                {s.students.length > 0 && (
-                                                    <div className="mt-1 truncate opacity-90">
-                                                        {s.students
-                                                            .slice(0, 2)
-                                                            .map((student) => student.name)
-                                                            .join(", ")}
-                                                        {s.students.length > 2 ? ` +${s.students.length - 2}` : ""}
                                                     </div>
-                                                )}
+                                                    <Badge
+                                                        variant="secondary"
+                                                        className={[
+                                                            "h-4 px-1.5 text-[9px] tabular-nums",
+                                                            isFull ? "bg-destructive/15 text-destructive" : "",
+                                                        ].join(" ")}
+                                                    >
+                                                        {s.students.length}/{s.maxStudents}
+                                                    </Badge>
+                                                </div>
+
+                                                <div className="h-1 w-full overflow-hidden rounded-full bg-muted/60">
+                                                    <div
+                                                        className={[
+                                                            "h-full rounded-full transition-all",
+                                                            isFull ? "bg-destructive/80" : isNearCapacity ? "bg-amber-500/80" : "bg-primary/80",
+                                                        ].join(" ")}
+                                                        style={{ width: `${Math.max(6, Math.round(fillRatio * 100))}%` }}
+                                                    />
+                                                </div>
+
                                             </div>
                                         );
                                     })}

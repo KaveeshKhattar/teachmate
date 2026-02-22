@@ -20,6 +20,8 @@ export interface SchedulerConstraints {
   studentsPerHour: number;
   classHours: ClassHourConstraint[];
   filters: SchedulerFilters;
+  offDays: PlannerDay[];
+  preferredDays: PlannerDay[];
 }
 
 interface StudentGroup {
@@ -121,6 +123,16 @@ export function sanitizeConstraints(value: unknown): SchedulerConstraints {
   const daysPerWeek = clampInt(Number(obj.daysPerWeek) || 5, 1, 7);
   const classesPerDay = clampInt(Number(obj.classesPerDay) || 4, 1, 24);
   const studentsPerHour = clampInt(Number(obj.studentsPerHour) || 4, 1, 100);
+  const offDays = Array.isArray(obj.offDays)
+    ? obj.offDays
+        .filter((day): day is PlannerDay => typeof day === "string" && DAY_ORDER.includes(day as PlannerDay))
+        .filter((day, index, arr) => arr.indexOf(day) === index)
+    : [];
+  const preferredDays = Array.isArray(obj.preferredDays)
+    ? obj.preferredDays
+        .filter((day): day is PlannerDay => typeof day === "string" && DAY_ORDER.includes(day as PlannerDay))
+        .filter((day, index, arr) => arr.indexOf(day) === index)
+    : [];
 
   return {
     daysPerWeek,
@@ -131,6 +143,8 @@ export function sanitizeConstraints(value: unknown): SchedulerConstraints {
       sameBoardOnly: parseBoolean(filters.sameBoardOnly, true),
       sameGradeOnly: parseBoolean(filters.sameGradeOnly, true),
     },
+    offDays,
+    preferredDays,
   };
 }
 
@@ -257,11 +271,27 @@ export function buildSchedulePlan(
   rawConstraints: unknown
 ): SchedulerPlanResult {
   const constraints = sanitizeConstraints(rawConstraints);
-  const selectedDays = DAY_ORDER.slice(0, constraints.daysPerWeek);
+  const availableDays = DAY_ORDER.filter((day) => !constraints.offDays.includes(day));
+  const preferredDaySet = new Set(
+    constraints.preferredDays.filter((day) => availableDays.includes(day))
+  );
+  const prioritizedDays = [
+    ...availableDays.filter((day) => preferredDaySet.has(day)),
+    ...availableDays.filter((day) => !preferredDaySet.has(day)),
+  ];
+  const selectedDays = prioritizedDays.slice(0, constraints.daysPerWeek);
+  const preferredDayRank = new Map(
+    constraints.preferredDays.map((day, index) => [day, index] as const)
+  );
   const warnings: string[] = [];
 
   if (constraints.classHours.length === 0) {
     warnings.push("No class-hour constraints were provided. Returning an empty schedule.");
+  }
+  if (selectedDays.length < constraints.daysPerWeek) {
+    warnings.push(
+      `Only ${selectedDays.length} teaching day(s) available after off-day preferences. Reduce days/week or remove off days.`
+    );
   }
 
   const groups = splitStudentsIntoGroups(students, constraints.filters);
@@ -277,8 +307,16 @@ export function buildSchedulePlan(
     let placed = false;
 
     const orderedDayIndexes = dayBuckets
-      .map((bucket, index) => ({ index, load: bucket.sessions.length, hasBatch: dayBatchMap[index].has(unit.batch.batchId) }))
+      .map((bucket, index) => ({
+        index,
+        day: bucket.day,
+        load: bucket.sessions.length,
+        hasBatch: dayBatchMap[index].has(unit.batch.batchId),
+      }))
       .sort((a, b) => {
+        const aPreferred = preferredDayRank.get(a.day) ?? Number.POSITIVE_INFINITY;
+        const bPreferred = preferredDayRank.get(b.day) ?? Number.POSITIVE_INFINITY;
+        if (aPreferred !== bPreferred) return aPreferred - bPreferred;
         if (a.hasBatch !== b.hasBatch) return Number(a.hasBatch) - Number(b.hasBatch);
         if (a.load !== b.load) return a.load - b.load;
         return a.index - b.index;
@@ -362,6 +400,82 @@ function inferClassHoursFromPrompt(prompt: string): ClassHourConstraint[] {
     .filter((item) => item.className.length > 0);
 }
 
+function inferOffDaysFromPrompt(prompt: string): PlannerDay[] {
+  const dayMappings: Array<{ key: PlannerDay; pattern: RegExp }> = [
+    { key: "MON", pattern: /\b(?:mon|monday)\b/i },
+    { key: "TUE", pattern: /\b(?:tue|tues|tuesday)\b/i },
+    { key: "WED", pattern: /\b(?:wed|wednesday)\b/i },
+    { key: "THU", pattern: /\b(?:thu|thur|thurs|thursday)\b/i },
+    { key: "FRI", pattern: /\b(?:fri|friday)\b/i },
+    { key: "SAT", pattern: /\b(?:sat|saturday)\b/i },
+    { key: "SUN", pattern: /\b(?:sun|sunday)\b/i },
+  ];
+
+  const normalized = prompt.toLowerCase();
+  if (!/\b(?:off|day\s*off|no\s+class|no\s+classes|unavailable|leave|cancel|cancelled)\b/.test(normalized)) {
+    return [];
+  }
+
+  return dayMappings
+    .filter((entry) => entry.pattern.test(prompt))
+    .map((entry) => entry.key);
+}
+
+function inferMoveDaysFromPrompt(prompt: string): { sourceDays: PlannerDay[]; targetDays: PlannerDay[] } {
+  const dayTokenToCode = new Map<string, PlannerDay>([
+    ["mon", "MON"],
+    ["monday", "MON"],
+    ["tue", "TUE"],
+    ["tues", "TUE"],
+    ["tuesday", "TUE"],
+    ["wed", "WED"],
+    ["wednesday", "WED"],
+    ["thu", "THU"],
+    ["thur", "THU"],
+    ["thurs", "THU"],
+    ["thursday", "THU"],
+    ["fri", "FRI"],
+    ["friday", "FRI"],
+    ["sat", "SAT"],
+    ["saturday", "SAT"],
+    ["sun", "SUN"],
+    ["sunday", "SUN"],
+  ]);
+
+  const matches = [...prompt.matchAll(/\b(?:move|shift|reassign|reschedule)\s+([a-z]+)\b[\s\S]{0,40}?\bto\s+([a-z]+)\b/gi)];
+  const sourceDays: PlannerDay[] = [];
+  const targetDays: PlannerDay[] = [];
+
+  for (const match of matches) {
+    const source = dayTokenToCode.get((match[1] ?? "").toLowerCase());
+    const target = dayTokenToCode.get((match[2] ?? "").toLowerCase());
+    if (source) sourceDays.push(source);
+    if (target) targetDays.push(target);
+  }
+
+  return {
+    sourceDays: sourceDays.filter((day, index, arr) => arr.indexOf(day) === index),
+    targetDays: targetDays.filter((day, index, arr) => arr.indexOf(day) === index),
+  };
+}
+
+function inferPreferredDaysFromPrompt(prompt: string): PlannerDay[] {
+  const actionable = /\b(?:reassign|reschedule|move|shift|assign)\b/i.test(prompt);
+  if (!actionable) return [];
+
+  const patterns: Array<{ key: PlannerDay; pattern: RegExp }> = [
+    { key: "MON", pattern: /\bto\s+(?:mon|monday)\b/i },
+    { key: "TUE", pattern: /\bto\s+(?:tue|tues|tuesday)\b/i },
+    { key: "WED", pattern: /\bto\s+(?:wed|wednesday)\b/i },
+    { key: "THU", pattern: /\bto\s+(?:thu|thur|thurs|thursday)\b/i },
+    { key: "FRI", pattern: /\bto\s+(?:fri|friday)\b/i },
+    { key: "SAT", pattern: /\bto\s+(?:sat|saturday)\b/i },
+    { key: "SUN", pattern: /\bto\s+(?:sun|sunday)\b/i },
+  ];
+
+  return patterns.filter((row) => row.pattern.test(prompt)).map((row) => row.key);
+}
+
 export function parseConstraintsFromPromptFallback(prompt: string): SchedulerConstraints {
   const daysPerWeek = clampInt(
     findNumeric(prompt, [/(?:days?\s*per\s*week|for)\D{0,10}(\d+)/i, /(\d+)\s*days?\s*(?:a|per)\s*week/i], 5),
@@ -392,6 +506,9 @@ export function parseConstraintsFromPromptFallback(prompt: string): SchedulerCon
     : /\bmix(?:ed)?\s+grade\b/.test(normalizedPrompt)
       ? false
       : true;
+  const moveDays = inferMoveDaysFromPrompt(prompt);
+  const offDays = [...new Set([...inferOffDaysFromPrompt(prompt), ...moveDays.sourceDays])];
+  const preferredDays = [...new Set([...inferPreferredDaysFromPrompt(prompt), ...moveDays.targetDays])];
 
   return {
     daysPerWeek,
@@ -399,5 +516,7 @@ export function parseConstraintsFromPromptFallback(prompt: string): SchedulerCon
     studentsPerHour,
     classHours: inferClassHoursFromPrompt(prompt),
     filters: { sameBoardOnly, sameGradeOnly },
+    offDays,
+    preferredDays,
   };
 }

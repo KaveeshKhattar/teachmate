@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
   Brain,
+  CalendarPlus,
   CalendarDays,
   CreditCard,
   GraduationCap,
@@ -31,13 +32,19 @@ const data = {
       icon: Users,
     },
     {
-      title: "Create a Schedule",
+      title: "Create your Schedule",
       url: "/teacher/brainstorm",
       icon: CalendarDays,
     },
     {
-      title: "AI Scheduler",
-      url: "/teacher/ai-scheduler",
+      title: "Generate a Schedule",
+      url: "/teacher/schedule-generator",
+      icon: CalendarPlus,
+      isNew: true,
+    },
+    {
+      title: "AI",
+      url: "/teacher/ai-schedule-adjust",
       icon: Sparkles,
       isNew: true,
     },
