@@ -1,9 +1,14 @@
-import prisma from '../../../lib/prisma';
-import { NextResponse } from 'next/server';
+import { auth } from "@clerk/nextjs/server";
+import prisma from "../../../lib/prisma";
+import { NextResponse } from "next/server";
 
 export async function GET() {
+  const { userId } = await auth();
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    // Fetch teachers and their user data
     const teachers = await prisma.teacher.findMany({
       include: {
         user: {
@@ -12,16 +17,14 @@ export async function GET() {
             firstName: true,
             lastName: true,
             imageUrl: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
-    console.log(teachers);
-    // Return the teacher data as a response using NextResponse
+
     return NextResponse.json(teachers, { status: 200 });
   } catch (error) {
-    console.error('Failed to fetch teacher data:', error);
-    return NextResponse.json({ error: 'Failed to fetch teacher data' }, { status: 500 });
+    console.error("Failed to fetch teacher data:", error);
+    return NextResponse.json({ error: "Failed to fetch teacher data" }, { status: 500 });
   }
 }
-

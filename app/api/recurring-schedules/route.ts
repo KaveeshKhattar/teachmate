@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 import { getTeacherIdFromAuth } from "@/lib/get-teacher-id-from-auth";
 
 export async function GET() {
@@ -45,6 +45,11 @@ export async function GET() {
 }
 
 export async function DELETE(req: NextRequest) {
+  const teacherId = await getTeacherIdFromAuth();
+  if (!teacherId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(req.url);
 
   const scheduleId = searchParams.get("scheduleId");
@@ -65,14 +70,23 @@ export async function DELETE(req: NextRequest) {
     );
   }
 
+  const ownedSchedule = await prisma.recurringSchedule.findFirst({
+    where: { id, teacherId },
+    select: { id: true },
+  });
+
+  if (!ownedSchedule) {
+    return NextResponse.json({ error: "Schedule not found" }, { status: 404 });
+  }
+
   // delete exceptions first
   await prisma.recurringException.deleteMany({
-    where: { recurringScheduleId: id }
+    where: { recurringScheduleId: id },
   });
 
   // delete the schedule itself
   await prisma.recurringSchedule.delete({
-    where: { id }
+    where: { id },
   });
 
   return NextResponse.json({ success: true });
@@ -94,6 +108,11 @@ function combineDateAndTime(date: string, time: string) {
 type WeekDayType = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 
 export async function PATCH(req: Request) {
+  const teacherId = await getTeacherIdFromAuth();
+  if (!teacherId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   let body: PatchBody;
 
   try {
@@ -109,6 +128,18 @@ export async function PATCH(req: Request) {
       { error: "Invalid payload" },
       { status: 400 }
     );
+  }
+
+  const ownedSchedule = await prisma.recurringSchedule.findFirst({
+    where: {
+      id: scheduleId,
+      teacherId,
+    },
+    select: { id: true },
+  });
+
+  if (!ownedSchedule) {
+    return NextResponse.json({ error: "Schedule not found" }, { status: 404 });
   }
 
   try {

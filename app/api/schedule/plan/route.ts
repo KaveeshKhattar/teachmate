@@ -319,25 +319,6 @@ async function parseConstraintsWithHuggingFaceDebug(prompt: string): Promise<Pro
   }
 }
 
-async function parseConstraintsWithHuggingFace(
-  prompt: string
-): Promise<SchedulerConstraints | null> {
-  const result = await parseConstraintsWithHuggingFaceDebug(prompt);
-  return result.constraints;
-}
-
-async function parseConstraintsWithAi(prompt: string): Promise<SchedulerConstraints | null> {
-  const provider = getAiProvider();
-
-  if (provider === "huggingface") {
-    return parseConstraintsWithHuggingFace(prompt);
-  }
-
-  const openAiParsed = await parseConstraintsWithOpenAi(prompt);
-  if (openAiParsed) return openAiParsed;
-  return parseConstraintsWithHuggingFace(prompt);
-}
-
 async function parseConstraintsWithAiDebug(prompt: string): Promise<AiParseResult> {
   const provider = getAiProvider();
 

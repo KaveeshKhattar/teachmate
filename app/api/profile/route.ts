@@ -5,12 +5,15 @@ import prisma from "../../../lib/prisma";
 export async function POST(req: Request) {
   try {
     const { userId: authedClerkUserId } = await auth();
+    if (!authedClerkUserId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const clerkUser = await currentUser();
     const unsafeMetadata = (clerkUser?.unsafeMetadata ?? {}) as Record<string, unknown>;
 
     const body = await req.json().catch(() => ({}));
     const {
-      clerkUserId,
       role,
       email,
       firstName,
@@ -33,11 +36,7 @@ export async function POST(req: Request) {
           ? Number(rawTeacherId)
           : null;
 
-    const resolvedClerkUserId =
-      clerkUserId ??
-      authedClerkUserId ??
-      clerkUser?.id ??
-      null;
+    const resolvedClerkUserId = authedClerkUserId;
 
     const resolvedEmail =
       email ??

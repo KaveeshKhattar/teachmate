@@ -1,20 +1,39 @@
 // app/api/recurring-schedules/occurrence/[date]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getTeacherIdFromAuth } from "@/lib/get-teacher-id-from-auth";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ date: string }> }
 ) {
+  const teacherId = await getTeacherIdFromAuth();
+  if (!teacherId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { date } = await params; // ← await params
   const { startTime, endTime } = await req.json();
   const scheduleIdNum = Number(req.nextUrl.searchParams.get("scheduleId"));
+
+  if (!Number.isInteger(scheduleIdNum)) {
+    return NextResponse.json({ error: "Invalid scheduleId" }, { status: 400 });
+  }
 
   const decoded = decodeURIComponent(date); // "2026-02-17"
   const occurrenceDate = new Date(decoded + "T00:00:00Z"); // explicit UTC midnight
 
   if (isNaN(occurrenceDate.getTime())) {
     return NextResponse.json({ error: "Invalid date: " + decoded }, { status: 400 });
+  }
+
+  const ownedSchedule = await prisma.recurringSchedule.findFirst({
+    where: { id: scheduleIdNum, teacherId },
+    select: { id: true },
+  });
+
+  if (!ownedSchedule) {
+    return NextResponse.json({ error: "Schedule not found" }, { status: 404 });
   }
 
   // Normalize to midnight UTC
@@ -69,14 +88,32 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ date: string }> }
 ) {
+  const teacherId = await getTeacherIdFromAuth();
+  if (!teacherId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { date } = await params; // ← await params here too
   const scheduleIdNum = Number(req.nextUrl.searchParams.get("scheduleId"));
+
+  if (!Number.isInteger(scheduleIdNum)) {
+    return NextResponse.json({ error: "Invalid scheduleId" }, { status: 400 });
+  }
 
   const decoded = decodeURIComponent(date);
   const occurrenceDate = new Date(decoded);
 
   if (isNaN(occurrenceDate.getTime())) {
     return NextResponse.json({ error: "Invalid date: " + decoded }, { status: 400 });
+  }
+
+  const ownedSchedule = await prisma.recurringSchedule.findFirst({
+    where: { id: scheduleIdNum, teacherId },
+    select: { id: true },
+  });
+
+  if (!ownedSchedule) {
+    return NextResponse.json({ error: "Schedule not found" }, { status: 404 });
   }
 
   const dateOnly = new Date(Date.UTC(

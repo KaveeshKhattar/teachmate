@@ -44,7 +44,7 @@ jobs:
         run: pnpm lint
 
       - name: Typecheck
-        run: pnpm exec tsc --noEmit
+        run: pnpm typecheck
 
       - name: Check Clerk key availability
         id: clerk

@@ -1,6 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { getAuthedStudentAccess } from "@/lib/access-control";
 
 function getMonthYear(inputYear?: unknown, inputMonth?: unknown) {
   const now = new Date();
@@ -33,15 +33,8 @@ function getMonthYear(inputYear?: unknown, inputMonth?: unknown) {
 }
 
 async function getAuthedStudentId() {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) return null;
-
-  const student = await prisma.student.findFirst({
-    where: { user: { clerkUserId } },
-    select: { id: true },
-  });
-
-  return student?.id ?? null;
+  const access = await getAuthedStudentAccess();
+  return access?.studentId ?? null;
 }
 
 export async function GET(req: Request) {

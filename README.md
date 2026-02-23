@@ -83,6 +83,11 @@ pnpm install
 2. Configure environment variables (`.env`):
 - Clerk keys
 - Database connection strings (`DIRECT_URL`, etc.)
+- Entitlement controls (optional, for paid-access gating):
+  - `REQUIRE_ENTITLEMENT=true` to enforce allowlists
+  - `TEACHER_ENTITLED_USER_IDS=clerk_user_id_1,clerk_user_id_2`
+  - `STUDENT_ENTITLED_USER_IDS=clerk_user_id_3,clerk_user_id_4`
+  - `ENTITLED_USER_IDS=...` (global allowlist for both roles)
 - Scheduler AI parsing (optional):
   - `SCHEDULER_AI_PROVIDER=openai|huggingface`
   - `OPENAI_API_KEY=...` (if using OpenAI)
@@ -116,7 +121,7 @@ pnpm dev
 pnpm build
 pnpm start
 pnpm lint
-pnpm exec tsc --noEmit
+pnpm typecheck
 ```
 
 ## Notes

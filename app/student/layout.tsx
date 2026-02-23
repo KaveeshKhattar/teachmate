@@ -1,34 +1,29 @@
 import React from "react";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { StudentAppSidebar } from "@/components/student-app-sidebar";
 import { Separator } from "@/components/ui/separator";
+import { getAuthedAccessContext } from "@/lib/access-control";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-type RoleMetadata = {
-  ROLE?: string;
-  role?: string;
-};
-
 export default async function StudentLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  if (!userId) redirect("/");
+  const access = await getAuthedAccessContext();
+  if (!access) redirect("/");
 
-  const user = await currentUser();
-  const metadata = (user?.unsafeMetadata ?? {}) as RoleMetadata;
-  const role = metadata.role ?? metadata.ROLE;
-
-  if (role !== "STUDENT") {
-    if (role === "TEACHER") redirect("/teacher/dashboard");
+  if (access.role !== "STUDENT") {
+    if (access.role === "TEACHER") redirect("/teacher/dashboard");
     redirect("/onboarding");
+  }
+
+  if (!access.entitled) {
+    redirect("/onboarding?access=required");
   }
 
   return (
