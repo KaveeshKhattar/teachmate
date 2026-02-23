@@ -46,6 +46,8 @@ export type PaymentMinAggregateOutputType = {
   month: number | null
   year: number | null
   paidAt: Date | null
+  proofUrl: string | null
+  proofNote: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +58,8 @@ export type PaymentMaxAggregateOutputType = {
   month: number | null
   year: number | null
   paidAt: Date | null
+  proofUrl: string | null
+  proofNote: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -66,6 +70,8 @@ export type PaymentCountAggregateOutputType = {
   month: number
   year: number
   paidAt: number
+  proofUrl: number
+  proofNote: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,6 +98,8 @@ export type PaymentMinAggregateInputType = {
   month?: true
   year?: true
   paidAt?: true
+  proofUrl?: true
+  proofNote?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -102,6 +110,8 @@ export type PaymentMaxAggregateInputType = {
   month?: true
   year?: true
   paidAt?: true
+  proofUrl?: true
+  proofNote?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +122,8 @@ export type PaymentCountAggregateInputType = {
   month?: true
   year?: true
   paidAt?: true
+  proofUrl?: true
+  proofNote?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -209,6 +221,8 @@ export type PaymentGroupByOutputType = {
   month: number
   year: number
   paidAt: Date
+  proofUrl: string | null
+  proofNote: string | null
   createdAt: Date
   updatedAt: Date
   _count: PaymentCountAggregateOutputType | null
@@ -242,6 +256,8 @@ export type PaymentWhereInput = {
   month?: Prisma.IntFilter<"Payment"> | number
   year?: Prisma.IntFilter<"Payment"> | number
   paidAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  proofUrl?: Prisma.StringNullableFilter<"Payment"> | string | null
+  proofNote?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -253,6 +269,8 @@ export type PaymentOrderByWithRelationInput = {
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
@@ -268,6 +286,8 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   month?: Prisma.IntFilter<"Payment"> | number
   year?: Prisma.IntFilter<"Payment"> | number
   paidAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  proofUrl?: Prisma.StringNullableFilter<"Payment"> | string | null
+  proofNote?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -279,6 +299,8 @@ export type PaymentOrderByWithAggregationInput = {
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  proofNote?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentCountOrderByAggregateInput
@@ -297,6 +319,8 @@ export type PaymentScalarWhereWithAggregatesInput = {
   month?: Prisma.IntWithAggregatesFilter<"Payment"> | number
   year?: Prisma.IntWithAggregatesFilter<"Payment"> | number
   paidAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
+  proofUrl?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  proofNote?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
 }
@@ -305,6 +329,8 @@ export type PaymentCreateInput = {
   month: number
   year: number
   paidAt?: Date | string
+  proofUrl?: string | null
+  proofNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutPaymentsInput
@@ -316,6 +342,8 @@ export type PaymentUncheckedCreateInput = {
   month: number
   year: number
   paidAt?: Date | string
+  proofUrl?: string | null
+  proofNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -324,6 +352,8 @@ export type PaymentUpdateInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutPaymentsNestedInput
@@ -335,6 +365,8 @@ export type PaymentUncheckedUpdateInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -345,6 +377,8 @@ export type PaymentCreateManyInput = {
   month: number
   year: number
   paidAt?: Date | string
+  proofUrl?: string | null
+  proofNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -353,6 +387,8 @@ export type PaymentUpdateManyMutationInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -363,6 +399,8 @@ export type PaymentUncheckedUpdateManyInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -389,6 +427,8 @@ export type PaymentCountOrderByAggregateInput = {
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrder
+  proofNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -406,6 +446,8 @@ export type PaymentMaxOrderByAggregateInput = {
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrder
+  proofNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -416,6 +458,8 @@ export type PaymentMinOrderByAggregateInput = {
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   paidAt?: Prisma.SortOrder
+  proofUrl?: Prisma.SortOrder
+  proofNote?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -473,6 +517,8 @@ export type PaymentCreateWithoutStudentInput = {
   month: number
   year: number
   paidAt?: Date | string
+  proofUrl?: string | null
+  proofNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -482,6 +528,8 @@ export type PaymentUncheckedCreateWithoutStudentInput = {
   month: number
   year: number
   paidAt?: Date | string
+  proofUrl?: string | null
+  proofNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -521,6 +569,8 @@ export type PaymentScalarWhereInput = {
   month?: Prisma.IntFilter<"Payment"> | number
   year?: Prisma.IntFilter<"Payment"> | number
   paidAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  proofUrl?: Prisma.StringNullableFilter<"Payment"> | string | null
+  proofNote?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
 }
@@ -530,6 +580,8 @@ export type PaymentCreateManyStudentInput = {
   month: number
   year: number
   paidAt?: Date | string
+  proofUrl?: string | null
+  proofNote?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -538,6 +590,8 @@ export type PaymentUpdateWithoutStudentInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -547,6 +601,8 @@ export type PaymentUncheckedUpdateWithoutStudentInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -556,6 +612,8 @@ export type PaymentUncheckedUpdateManyWithoutStudentInput = {
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   paidAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  proofUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  proofNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -568,6 +626,8 @@ export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   month?: boolean
   year?: boolean
   paidAt?: boolean
+  proofUrl?: boolean
+  proofNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -579,6 +639,8 @@ export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   month?: boolean
   year?: boolean
   paidAt?: boolean
+  proofUrl?: boolean
+  proofNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -590,6 +652,8 @@ export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   month?: boolean
   year?: boolean
   paidAt?: boolean
+  proofUrl?: boolean
+  proofNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
@@ -601,11 +665,13 @@ export type PaymentSelectScalar = {
   month?: boolean
   year?: boolean
   paidAt?: boolean
+  proofUrl?: boolean
+  proofNote?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "month" | "year" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "month" | "year" | "paidAt" | "proofUrl" | "proofNote" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
 }
@@ -627,6 +693,8 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     month: number
     year: number
     paidAt: Date
+    proofUrl: string | null
+    proofNote: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["payment"]>
@@ -1058,6 +1126,8 @@ export interface PaymentFieldRefs {
   readonly month: Prisma.FieldRef<"Payment", 'Int'>
   readonly year: Prisma.FieldRef<"Payment", 'Int'>
   readonly paidAt: Prisma.FieldRef<"Payment", 'DateTime'>
+  readonly proofUrl: Prisma.FieldRef<"Payment", 'String'>
+  readonly proofNote: Prisma.FieldRef<"Payment", 'String'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Payment", 'DateTime'>
 }

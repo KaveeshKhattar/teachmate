@@ -1,6 +1,6 @@
 import * as React from "react";
 import Link from "next/link";
-import { BookOpenCheck, CircleUserRound, Wallet, GraduationCap } from "lucide-react";
+import { BookOpenCheck, CircleUserRound, Wallet, GraduationCap, Bell, LineChart } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -23,6 +23,16 @@ const data = {
       title: "Payments",
       url: "/student/payments",
       icon: Wallet,
+    },
+    {
+      title: "Notifications",
+      url: "/student/notifications",
+      icon: Bell,
+    },
+    {
+      title: "Progress",
+      url: "/student/progress",
+      icon: LineChart,
     },
     {
       title: "Profile",

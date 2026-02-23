@@ -5,6 +5,7 @@ import {
   CalendarDays,
   CreditCard,
   GraduationCap,
+  LineChart,
   Sparkles,
   UserRound,
   Users,
@@ -61,6 +62,11 @@ const data = {
       title: "Payments",
       url: "/teacher/payments",
       icon: CreditCard,
+    },
+    {
+      title: "Progress",
+      url: "/teacher/progress",
+      icon: LineChart,
     },
     {
       title: "Profile",

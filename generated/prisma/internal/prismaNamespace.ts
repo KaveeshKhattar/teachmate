@@ -394,7 +394,10 @@ export const ModelName = {
   RecurringDay: 'RecurringDay',
   RecurringException: 'RecurringException',
   RecurringDayAssignment: 'RecurringDayAssignment',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  PaymentReminder: 'PaymentReminder',
+  StudentNotification: 'StudentNotification',
+  Assessment: 'Assessment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "waitlist" | "user" | "student" | "teacher" | "slot" | "slotAssignment" | "recurringSchedule" | "recurringDay" | "recurringException" | "recurringDayAssignment" | "payment"
+    modelProps: "waitlist" | "user" | "student" | "teacher" | "slot" | "slotAssignment" | "recurringSchedule" | "recurringDay" | "recurringException" | "recurringDayAssignment" | "payment" | "paymentReminder" | "studentNotification" | "assessment"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1231,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PaymentReminder: {
+      payload: Prisma.$PaymentReminderPayload<ExtArgs>
+      fields: Prisma.PaymentReminderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PaymentReminderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PaymentReminderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>
+        }
+        findFirst: {
+          args: Prisma.PaymentReminderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PaymentReminderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>
+        }
+        findMany: {
+          args: Prisma.PaymentReminderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>[]
+        }
+        create: {
+          args: Prisma.PaymentReminderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>
+        }
+        createMany: {
+          args: Prisma.PaymentReminderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PaymentReminderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>[]
+        }
+        delete: {
+          args: Prisma.PaymentReminderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>
+        }
+        update: {
+          args: Prisma.PaymentReminderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>
+        }
+        deleteMany: {
+          args: Prisma.PaymentReminderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PaymentReminderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PaymentReminderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>[]
+        }
+        upsert: {
+          args: Prisma.PaymentReminderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PaymentReminderPayload>
+        }
+        aggregate: {
+          args: Prisma.PaymentReminderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePaymentReminder>
+        }
+        groupBy: {
+          args: Prisma.PaymentReminderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentReminderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PaymentReminderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PaymentReminderCountAggregateOutputType> | number
+        }
+      }
+    }
+    StudentNotification: {
+      payload: Prisma.$StudentNotificationPayload<ExtArgs>
+      fields: Prisma.StudentNotificationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudentNotificationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudentNotificationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>
+        }
+        findFirst: {
+          args: Prisma.StudentNotificationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudentNotificationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>
+        }
+        findMany: {
+          args: Prisma.StudentNotificationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>[]
+        }
+        create: {
+          args: Prisma.StudentNotificationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>
+        }
+        createMany: {
+          args: Prisma.StudentNotificationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudentNotificationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>[]
+        }
+        delete: {
+          args: Prisma.StudentNotificationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>
+        }
+        update: {
+          args: Prisma.StudentNotificationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudentNotificationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudentNotificationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudentNotificationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudentNotificationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentNotificationPayload>
+        }
+        aggregate: {
+          args: Prisma.StudentNotificationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudentNotification>
+        }
+        groupBy: {
+          args: Prisma.StudentNotificationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentNotificationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudentNotificationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentNotificationCountAggregateOutputType> | number
+        }
+      }
+    }
+    Assessment: {
+      payload: Prisma.$AssessmentPayload<ExtArgs>
+      fields: Prisma.AssessmentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AssessmentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AssessmentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+        }
+        findFirst: {
+          args: Prisma.AssessmentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AssessmentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+        }
+        findMany: {
+          args: Prisma.AssessmentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>[]
+        }
+        create: {
+          args: Prisma.AssessmentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+        }
+        createMany: {
+          args: Prisma.AssessmentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AssessmentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>[]
+        }
+        delete: {
+          args: Prisma.AssessmentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+        }
+        update: {
+          args: Prisma.AssessmentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+        }
+        deleteMany: {
+          args: Prisma.AssessmentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AssessmentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AssessmentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>[]
+        }
+        upsert: {
+          args: Prisma.AssessmentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssessmentPayload>
+        }
+        aggregate: {
+          args: Prisma.AssessmentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAssessment>
+        }
+        groupBy: {
+          args: Prisma.AssessmentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AssessmentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AssessmentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AssessmentCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1391,11 +1616,61 @@ export const PaymentScalarFieldEnum = {
   month: 'month',
   year: 'year',
   paidAt: 'paidAt',
+  proofUrl: 'proofUrl',
+  proofNote: 'proofNote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentReminderScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  studentId: 'studentId',
+  month: 'month',
+  year: 'year',
+  channel: 'channel',
+  note: 'note',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentReminderScalarFieldEnum = (typeof PaymentReminderScalarFieldEnum)[keyof typeof PaymentReminderScalarFieldEnum]
+
+
+export const StudentNotificationScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  relatedDate: 'relatedDate',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type StudentNotificationScalarFieldEnum = (typeof StudentNotificationScalarFieldEnum)[keyof typeof StudentNotificationScalarFieldEnum]
+
+
+export const AssessmentScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  teacherId: 'teacherId',
+  source: 'source',
+  subject: 'subject',
+  title: 'title',
+  score: 'score',
+  maxScore: 'maxScore',
+  takenAt: 'takenAt',
+  notes: 'notes',
+  createdByRole: 'createdByRole',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AssessmentScalarFieldEnum = (typeof AssessmentScalarFieldEnum)[keyof typeof AssessmentScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1495,6 +1770,48 @@ export type EnumWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMo
  * Reference to a field of type 'WeekDay[]'
  */
 export type ListEnumWeekDayFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeekDay[]'>
+    
+
+
+/**
+ * Reference to a field of type 'ReminderChannel'
+ */
+export type EnumReminderChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderChannel'>
+    
+
+
+/**
+ * Reference to a field of type 'ReminderChannel[]'
+ */
+export type ListEnumReminderChannelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReminderChannel[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationType'
+ */
+export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
+    
+
+
+/**
+ * Reference to a field of type 'NotificationType[]'
+ */
+export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'AssessmentSource'
+ */
+export type EnumAssessmentSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssessmentSource'>
+    
+
+
+/**
+ * Reference to a field of type 'AssessmentSource[]'
+ */
+export type ListEnumAssessmentSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AssessmentSource[]'>
     
 
 
@@ -1617,6 +1934,9 @@ export type GlobalOmitConfig = {
   recurringException?: Prisma.RecurringExceptionOmit
   recurringDayAssignment?: Prisma.RecurringDayAssignmentOmit
   payment?: Prisma.PaymentOmit
+  paymentReminder?: Prisma.PaymentReminderOmit
+  studentNotification?: Prisma.StudentNotificationOmit
+  assessment?: Prisma.AssessmentOmit
 }
 
 /* Types for Logging */

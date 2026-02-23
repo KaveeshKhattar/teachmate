@@ -28,3 +28,29 @@ export const WeekDay = {
 } as const
 
 export type WeekDay = (typeof WeekDay)[keyof typeof WeekDay]
+
+
+export const ReminderChannel = {
+  EMAIL: 'EMAIL',
+  WHATSAPP: 'WHATSAPP',
+  MANUAL: 'MANUAL'
+} as const
+
+export type ReminderChannel = (typeof ReminderChannel)[keyof typeof ReminderChannel]
+
+
+export const NotificationType = {
+  SCHEDULE_CHANGE: 'SCHEDULE_CHANGE',
+  PAYMENT: 'PAYMENT',
+  GENERAL: 'GENERAL'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const AssessmentSource = {
+  TUITION: 'TUITION',
+  SCHOOL: 'SCHOOL'
+} as const
+
+export type AssessmentSource = (typeof AssessmentSource)[keyof typeof AssessmentSource]

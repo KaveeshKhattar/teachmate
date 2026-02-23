@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getTeacherIdFromAuth } from "@/lib/get-teacher-id-from-auth";
+import { notifyScheduleStudentsForDate } from "@/lib/student-notifications";
 
 export async function PATCH(
   req: NextRequest,
@@ -81,6 +82,14 @@ export async function PATCH(
     },
   });
 
+  await notifyScheduleStudentsForDate(
+    teacherId,
+    scheduleIdNum,
+    occurrenceDate,
+    "Class Change Notification",
+    "A class instance for this day was rescheduled by your teacher. Please check your timetable."
+  );
+
   return NextResponse.json(exception);
 }
 
@@ -137,6 +146,14 @@ export async function DELETE(
       // no startTime/endTime = deletion marker
     },
   });
+
+  await notifyScheduleStudentsForDate(
+    teacherId,
+    scheduleIdNum,
+    occurrenceDate,
+    "Class Cancelled",
+    "A class instance for this day was cancelled by your teacher."
+  );
 
   return NextResponse.json({ ok: true });
 }

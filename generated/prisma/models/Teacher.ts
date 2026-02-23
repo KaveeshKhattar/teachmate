@@ -216,6 +216,8 @@ export type TeacherWhereInput = {
   Student?: Prisma.StudentListRelationFilter
   slots?: Prisma.SlotListRelationFilter
   recurringSchedules?: Prisma.RecurringScheduleListRelationFilter
+  paymentReminders?: Prisma.PaymentReminderListRelationFilter
+  assessments?: Prisma.AssessmentListRelationFilter
 }
 
 export type TeacherOrderByWithRelationInput = {
@@ -227,6 +229,8 @@ export type TeacherOrderByWithRelationInput = {
   Student?: Prisma.StudentOrderByRelationAggregateInput
   slots?: Prisma.SlotOrderByRelationAggregateInput
   recurringSchedules?: Prisma.RecurringScheduleOrderByRelationAggregateInput
+  paymentReminders?: Prisma.PaymentReminderOrderByRelationAggregateInput
+  assessments?: Prisma.AssessmentOrderByRelationAggregateInput
 }
 
 export type TeacherWhereUniqueInput = Prisma.AtLeast<{
@@ -241,6 +245,8 @@ export type TeacherWhereUniqueInput = Prisma.AtLeast<{
   Student?: Prisma.StudentListRelationFilter
   slots?: Prisma.SlotListRelationFilter
   recurringSchedules?: Prisma.RecurringScheduleListRelationFilter
+  paymentReminders?: Prisma.PaymentReminderListRelationFilter
+  assessments?: Prisma.AssessmentListRelationFilter
 }, "id" | "userId">
 
 export type TeacherOrderByWithAggregationInput = {
@@ -272,6 +278,8 @@ export type TeacherCreateInput = {
   Student?: Prisma.StudentCreateNestedManyWithoutTeacherInput
   slots?: Prisma.SlotCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUncheckedCreateInput = {
@@ -282,6 +290,8 @@ export type TeacherUncheckedCreateInput = {
   Student?: Prisma.StudentUncheckedCreateNestedManyWithoutTeacherInput
   slots?: Prisma.SlotUncheckedCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUpdateInput = {
@@ -291,6 +301,8 @@ export type TeacherUpdateInput = {
   Student?: Prisma.StudentUpdateManyWithoutTeacherNestedInput
   slots?: Prisma.SlotUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateInput = {
@@ -301,6 +313,8 @@ export type TeacherUncheckedUpdateInput = {
   Student?: Prisma.StudentUncheckedUpdateManyWithoutTeacherNestedInput
   slots?: Prisma.SlotUncheckedUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherCreateManyInput = {
@@ -437,12 +451,42 @@ export type TeacherUpdateOneRequiredWithoutRecurringSchedulesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutRecurringSchedulesInput, Prisma.TeacherUpdateWithoutRecurringSchedulesInput>, Prisma.TeacherUncheckedUpdateWithoutRecurringSchedulesInput>
 }
 
+export type TeacherCreateNestedOneWithoutPaymentRemindersInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutPaymentRemindersInput, Prisma.TeacherUncheckedCreateWithoutPaymentRemindersInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutPaymentRemindersInput
+  connect?: Prisma.TeacherWhereUniqueInput
+}
+
+export type TeacherUpdateOneRequiredWithoutPaymentRemindersNestedInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutPaymentRemindersInput, Prisma.TeacherUncheckedCreateWithoutPaymentRemindersInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutPaymentRemindersInput
+  upsert?: Prisma.TeacherUpsertWithoutPaymentRemindersInput
+  connect?: Prisma.TeacherWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutPaymentRemindersInput, Prisma.TeacherUpdateWithoutPaymentRemindersInput>, Prisma.TeacherUncheckedUpdateWithoutPaymentRemindersInput>
+}
+
+export type TeacherCreateNestedOneWithoutAssessmentsInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutAssessmentsInput, Prisma.TeacherUncheckedCreateWithoutAssessmentsInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutAssessmentsInput
+  connect?: Prisma.TeacherWhereUniqueInput
+}
+
+export type TeacherUpdateOneRequiredWithoutAssessmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.TeacherCreateWithoutAssessmentsInput, Prisma.TeacherUncheckedCreateWithoutAssessmentsInput>
+  connectOrCreate?: Prisma.TeacherCreateOrConnectWithoutAssessmentsInput
+  upsert?: Prisma.TeacherUpsertWithoutAssessmentsInput
+  connect?: Prisma.TeacherWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeacherUpdateToOneWithWhereWithoutAssessmentsInput, Prisma.TeacherUpdateWithoutAssessmentsInput>, Prisma.TeacherUncheckedUpdateWithoutAssessmentsInput>
+}
+
 export type TeacherCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   Student?: Prisma.StudentCreateNestedManyWithoutTeacherInput
   slots?: Prisma.SlotCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUncheckedCreateWithoutUserInput = {
@@ -452,6 +496,8 @@ export type TeacherUncheckedCreateWithoutUserInput = {
   Student?: Prisma.StudentUncheckedCreateNestedManyWithoutTeacherInput
   slots?: Prisma.SlotUncheckedCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutUserInput = {
@@ -476,6 +522,8 @@ export type TeacherUpdateWithoutUserInput = {
   Student?: Prisma.StudentUpdateManyWithoutTeacherNestedInput
   slots?: Prisma.SlotUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateWithoutUserInput = {
@@ -485,6 +533,8 @@ export type TeacherUncheckedUpdateWithoutUserInput = {
   Student?: Prisma.StudentUncheckedUpdateManyWithoutTeacherNestedInput
   slots?: Prisma.SlotUncheckedUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherCreateWithoutStudentInput = {
@@ -493,6 +543,8 @@ export type TeacherCreateWithoutStudentInput = {
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
   slots?: Prisma.SlotCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUncheckedCreateWithoutStudentInput = {
@@ -502,6 +554,8 @@ export type TeacherUncheckedCreateWithoutStudentInput = {
   updatedAt?: Date | string
   slots?: Prisma.SlotUncheckedCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutStudentInput = {
@@ -526,6 +580,8 @@ export type TeacherUpdateWithoutStudentInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
   slots?: Prisma.SlotUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateWithoutStudentInput = {
@@ -535,6 +591,8 @@ export type TeacherUncheckedUpdateWithoutStudentInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   slots?: Prisma.SlotUncheckedUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherCreateWithoutSlotsInput = {
@@ -543,6 +601,8 @@ export type TeacherCreateWithoutSlotsInput = {
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
   Student?: Prisma.StudentCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUncheckedCreateWithoutSlotsInput = {
@@ -552,6 +612,8 @@ export type TeacherUncheckedCreateWithoutSlotsInput = {
   updatedAt?: Date | string
   Student?: Prisma.StudentUncheckedCreateNestedManyWithoutTeacherInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutSlotsInput = {
@@ -576,6 +638,8 @@ export type TeacherUpdateWithoutSlotsInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
   Student?: Prisma.StudentUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateWithoutSlotsInput = {
@@ -585,6 +649,8 @@ export type TeacherUncheckedUpdateWithoutSlotsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Student?: Prisma.StudentUncheckedUpdateManyWithoutTeacherNestedInput
   recurringSchedules?: Prisma.RecurringScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherCreateWithoutRecurringSchedulesInput = {
@@ -593,6 +659,8 @@ export type TeacherCreateWithoutRecurringSchedulesInput = {
   user: Prisma.UserCreateNestedOneWithoutTeacherInput
   Student?: Prisma.StudentCreateNestedManyWithoutTeacherInput
   slots?: Prisma.SlotCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherUncheckedCreateWithoutRecurringSchedulesInput = {
@@ -602,6 +670,8 @@ export type TeacherUncheckedCreateWithoutRecurringSchedulesInput = {
   updatedAt?: Date | string
   Student?: Prisma.StudentUncheckedCreateNestedManyWithoutTeacherInput
   slots?: Prisma.SlotUncheckedCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutTeacherInput
 }
 
 export type TeacherCreateOrConnectWithoutRecurringSchedulesInput = {
@@ -626,6 +696,8 @@ export type TeacherUpdateWithoutRecurringSchedulesInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
   Student?: Prisma.StudentUpdateManyWithoutTeacherNestedInput
   slots?: Prisma.SlotUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
 }
 
 export type TeacherUncheckedUpdateWithoutRecurringSchedulesInput = {
@@ -635,6 +707,124 @@ export type TeacherUncheckedUpdateWithoutRecurringSchedulesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Student?: Prisma.StudentUncheckedUpdateManyWithoutTeacherNestedInput
   slots?: Prisma.SlotUncheckedUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherCreateWithoutPaymentRemindersInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  Student?: Prisma.StudentCreateNestedManyWithoutTeacherInput
+  slots?: Prisma.SlotCreateNestedManyWithoutTeacherInput
+  recurringSchedules?: Prisma.RecurringScheduleCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherUncheckedCreateWithoutPaymentRemindersInput = {
+  id?: number
+  userId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  Student?: Prisma.StudentUncheckedCreateNestedManyWithoutTeacherInput
+  slots?: Prisma.SlotUncheckedCreateNestedManyWithoutTeacherInput
+  recurringSchedules?: Prisma.RecurringScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  assessments?: Prisma.AssessmentUncheckedCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherCreateOrConnectWithoutPaymentRemindersInput = {
+  where: Prisma.TeacherWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutPaymentRemindersInput, Prisma.TeacherUncheckedCreateWithoutPaymentRemindersInput>
+}
+
+export type TeacherUpsertWithoutPaymentRemindersInput = {
+  update: Prisma.XOR<Prisma.TeacherUpdateWithoutPaymentRemindersInput, Prisma.TeacherUncheckedUpdateWithoutPaymentRemindersInput>
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutPaymentRemindersInput, Prisma.TeacherUncheckedCreateWithoutPaymentRemindersInput>
+  where?: Prisma.TeacherWhereInput
+}
+
+export type TeacherUpdateToOneWithWhereWithoutPaymentRemindersInput = {
+  where?: Prisma.TeacherWhereInput
+  data: Prisma.XOR<Prisma.TeacherUpdateWithoutPaymentRemindersInput, Prisma.TeacherUncheckedUpdateWithoutPaymentRemindersInput>
+}
+
+export type TeacherUpdateWithoutPaymentRemindersInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  Student?: Prisma.StudentUpdateManyWithoutTeacherNestedInput
+  slots?: Prisma.SlotUpdateManyWithoutTeacherNestedInput
+  recurringSchedules?: Prisma.RecurringScheduleUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherUncheckedUpdateWithoutPaymentRemindersInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Student?: Prisma.StudentUncheckedUpdateManyWithoutTeacherNestedInput
+  slots?: Prisma.SlotUncheckedUpdateManyWithoutTeacherNestedInput
+  recurringSchedules?: Prisma.RecurringScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  assessments?: Prisma.AssessmentUncheckedUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherCreateWithoutAssessmentsInput = {
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutTeacherInput
+  Student?: Prisma.StudentCreateNestedManyWithoutTeacherInput
+  slots?: Prisma.SlotCreateNestedManyWithoutTeacherInput
+  recurringSchedules?: Prisma.RecurringScheduleCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherUncheckedCreateWithoutAssessmentsInput = {
+  id?: number
+  userId: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  Student?: Prisma.StudentUncheckedCreateNestedManyWithoutTeacherInput
+  slots?: Prisma.SlotUncheckedCreateNestedManyWithoutTeacherInput
+  recurringSchedules?: Prisma.RecurringScheduleUncheckedCreateNestedManyWithoutTeacherInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedCreateNestedManyWithoutTeacherInput
+}
+
+export type TeacherCreateOrConnectWithoutAssessmentsInput = {
+  where: Prisma.TeacherWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutAssessmentsInput, Prisma.TeacherUncheckedCreateWithoutAssessmentsInput>
+}
+
+export type TeacherUpsertWithoutAssessmentsInput = {
+  update: Prisma.XOR<Prisma.TeacherUpdateWithoutAssessmentsInput, Prisma.TeacherUncheckedUpdateWithoutAssessmentsInput>
+  create: Prisma.XOR<Prisma.TeacherCreateWithoutAssessmentsInput, Prisma.TeacherUncheckedCreateWithoutAssessmentsInput>
+  where?: Prisma.TeacherWhereInput
+}
+
+export type TeacherUpdateToOneWithWhereWithoutAssessmentsInput = {
+  where?: Prisma.TeacherWhereInput
+  data: Prisma.XOR<Prisma.TeacherUpdateWithoutAssessmentsInput, Prisma.TeacherUncheckedUpdateWithoutAssessmentsInput>
+}
+
+export type TeacherUpdateWithoutAssessmentsInput = {
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutTeacherNestedInput
+  Student?: Prisma.StudentUpdateManyWithoutTeacherNestedInput
+  slots?: Prisma.SlotUpdateManyWithoutTeacherNestedInput
+  recurringSchedules?: Prisma.RecurringScheduleUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUpdateManyWithoutTeacherNestedInput
+}
+
+export type TeacherUncheckedUpdateWithoutAssessmentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  Student?: Prisma.StudentUncheckedUpdateManyWithoutTeacherNestedInput
+  slots?: Prisma.SlotUncheckedUpdateManyWithoutTeacherNestedInput
+  recurringSchedules?: Prisma.RecurringScheduleUncheckedUpdateManyWithoutTeacherNestedInput
+  paymentReminders?: Prisma.PaymentReminderUncheckedUpdateManyWithoutTeacherNestedInput
 }
 
 
@@ -646,12 +836,16 @@ export type TeacherCountOutputType = {
   Student: number
   slots: number
   recurringSchedules: number
+  paymentReminders: number
+  assessments: number
 }
 
 export type TeacherCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Student?: boolean | TeacherCountOutputTypeCountStudentArgs
   slots?: boolean | TeacherCountOutputTypeCountSlotsArgs
   recurringSchedules?: boolean | TeacherCountOutputTypeCountRecurringSchedulesArgs
+  paymentReminders?: boolean | TeacherCountOutputTypeCountPaymentRemindersArgs
+  assessments?: boolean | TeacherCountOutputTypeCountAssessmentsArgs
 }
 
 /**
@@ -685,6 +879,20 @@ export type TeacherCountOutputTypeCountRecurringSchedulesArgs<ExtArgs extends ru
   where?: Prisma.RecurringScheduleWhereInput
 }
 
+/**
+ * TeacherCountOutputType without action
+ */
+export type TeacherCountOutputTypeCountPaymentRemindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentReminderWhereInput
+}
+
+/**
+ * TeacherCountOutputType without action
+ */
+export type TeacherCountOutputTypeCountAssessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssessmentWhereInput
+}
+
 
 export type TeacherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -695,6 +903,8 @@ export type TeacherSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   Student?: boolean | Prisma.Teacher$StudentArgs<ExtArgs>
   slots?: boolean | Prisma.Teacher$slotsArgs<ExtArgs>
   recurringSchedules?: boolean | Prisma.Teacher$recurringSchedulesArgs<ExtArgs>
+  paymentReminders?: boolean | Prisma.Teacher$paymentRemindersArgs<ExtArgs>
+  assessments?: boolean | Prisma.Teacher$assessmentsArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["teacher"]>
 
@@ -727,6 +937,8 @@ export type TeacherInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   Student?: boolean | Prisma.Teacher$StudentArgs<ExtArgs>
   slots?: boolean | Prisma.Teacher$slotsArgs<ExtArgs>
   recurringSchedules?: boolean | Prisma.Teacher$recurringSchedulesArgs<ExtArgs>
+  paymentReminders?: boolean | Prisma.Teacher$paymentRemindersArgs<ExtArgs>
+  assessments?: boolean | Prisma.Teacher$assessmentsArgs<ExtArgs>
   _count?: boolean | Prisma.TeacherCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TeacherIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -743,6 +955,8 @@ export type $TeacherPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     Student: Prisma.$StudentPayload<ExtArgs>[]
     slots: Prisma.$SlotPayload<ExtArgs>[]
     recurringSchedules: Prisma.$RecurringSchedulePayload<ExtArgs>[]
+    paymentReminders: Prisma.$PaymentReminderPayload<ExtArgs>[]
+    assessments: Prisma.$AssessmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1147,6 +1361,8 @@ export interface Prisma__TeacherClient<T, Null = never, ExtArgs extends runtime.
   Student<T extends Prisma.Teacher$StudentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$StudentArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   slots<T extends Prisma.Teacher$slotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$slotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SlotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   recurringSchedules<T extends Prisma.Teacher$recurringSchedulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$recurringSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RecurringSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  paymentReminders<T extends Prisma.Teacher$paymentRemindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$paymentRemindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assessments<T extends Prisma.Teacher$assessmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Teacher$assessmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssessmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1645,6 +1861,54 @@ export type Teacher$recurringSchedulesArgs<ExtArgs extends runtime.Types.Extensi
   take?: number
   skip?: number
   distinct?: Prisma.RecurringScheduleScalarFieldEnum | Prisma.RecurringScheduleScalarFieldEnum[]
+}
+
+/**
+ * Teacher.paymentReminders
+ */
+export type Teacher$paymentRemindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PaymentReminder
+   */
+  select?: Prisma.PaymentReminderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PaymentReminder
+   */
+  omit?: Prisma.PaymentReminderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentReminderInclude<ExtArgs> | null
+  where?: Prisma.PaymentReminderWhereInput
+  orderBy?: Prisma.PaymentReminderOrderByWithRelationInput | Prisma.PaymentReminderOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentReminderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentReminderScalarFieldEnum | Prisma.PaymentReminderScalarFieldEnum[]
+}
+
+/**
+ * Teacher.assessments
+ */
+export type Teacher$assessmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Assessment
+   */
+  select?: Prisma.AssessmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Assessment
+   */
+  omit?: Prisma.AssessmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssessmentInclude<ExtArgs> | null
+  where?: Prisma.AssessmentWhereInput
+  orderBy?: Prisma.AssessmentOrderByWithRelationInput | Prisma.AssessmentOrderByWithRelationInput[]
+  cursor?: Prisma.AssessmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssessmentScalarFieldEnum | Prisma.AssessmentScalarFieldEnum[]
 }
 
 /**

@@ -94,3 +94,18 @@ export type RecurringDayAssignment = Prisma.RecurringDayAssignmentModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model PaymentReminder
+ * 
+ */
+export type PaymentReminder = Prisma.PaymentReminderModel
+/**
+ * Model StudentNotification
+ * 
+ */
+export type StudentNotification = Prisma.StudentNotificationModel
+/**
+ * Model Assessment
+ * 
+ */
+export type Assessment = Prisma.AssessmentModel

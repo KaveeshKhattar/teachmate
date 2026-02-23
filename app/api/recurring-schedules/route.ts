@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getTeacherIdFromAuth } from "@/lib/get-teacher-id-from-auth";
+import { notifyScheduleStudents } from "@/lib/student-notifications";
 
 export async function GET() {
   const teacherId = await getTeacherIdFromAuth();
@@ -89,6 +90,13 @@ export async function DELETE(req: NextRequest) {
     where: { id },
   });
 
+  await notifyScheduleStudents(
+    teacherId,
+    id,
+    "Class Schedule Removed",
+    "A recurring class schedule was removed by your teacher. Check your dashboard for the latest timetable."
+  );
+
   return NextResponse.json({ success: true });
 }
 
@@ -166,6 +174,13 @@ export async function PATCH(req: Request) {
         })),
       });
     });
+
+    await notifyScheduleStudents(
+      teacherId,
+      scheduleId,
+      "Class Timing Updated",
+      "A recurring class time or day has changed. Please review your updated class schedule."
+    );
 
     return NextResponse.json({ ok: true });
   } catch (e) {

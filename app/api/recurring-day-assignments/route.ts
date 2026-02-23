@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import type { WeekDay } from "@/types/scheduler";
 import { getTeacherIdFromAuth } from "@/lib/get-teacher-id-from-auth";
+import {
+  buildAssignmentMessage,
+  notifySingleStudentScheduleChange,
+} from "@/lib/student-notifications";
 
 const VALID_DAYS: WeekDay[] = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
@@ -98,6 +102,13 @@ export async function POST(req: Request) {
     const created = await prisma.recurringDayAssignment.create({
       data: { recurringScheduleId, day, studentId },
     });
+
+    await notifySingleStudentScheduleChange(
+      studentId,
+      "Schedule Updated",
+      buildAssignmentMessage(day, "added")
+    );
+
     return NextResponse.json(created, { status: 201 });
   } catch (error: unknown) {
     if (typeof error === "object" && error && "code" in error && error.code === "P2002") {
@@ -144,6 +155,14 @@ export async function DELETE(req: Request) {
   const deleted = await prisma.recurringDayAssignment.deleteMany({
     where: { recurringScheduleId, day, studentId },
   });
+
+  if (deleted.count > 0) {
+    await notifySingleStudentScheduleChange(
+      studentId,
+      "Schedule Updated",
+      buildAssignmentMessage(day, "removed")
+    );
+  }
 
   return NextResponse.json({ success: deleted.count > 0 });
 }

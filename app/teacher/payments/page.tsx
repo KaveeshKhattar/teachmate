@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PaymentReminderButton } from "@/components/payment-reminder-button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -29,6 +30,14 @@ function parseYearMonth(searchParams: Record<string, string | string[] | undefin
   return { year: safeYear, month: safeMonth };
 }
 
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
 export default async function TeacherPaymentsPage({
   searchParams,
 }: {
@@ -39,6 +48,11 @@ export default async function TeacherPaymentsPage({
 
   const resolvedSearchParams = await searchParams;
   const { year, month } = parseYearMonth(resolvedSearchParams);
+  const current = new Date(year, month - 1, 1);
+  const prev = new Date(current.getFullYear(), current.getMonth() - 1, 1);
+  const next = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+  const prevYear = prev.getFullYear();
+  const prevMonth = prev.getMonth() + 1;
 
   const teacher = await prisma.teacher.findFirst({
     where: { user: { clerkUserId } },
@@ -55,9 +69,27 @@ export default async function TeacherPaymentsPage({
             },
           },
           payments: {
-            where: { year, month },
-            select: { paidAt: true },
-            take: 1,
+            where: {
+              OR: [
+                { year, month },
+                { year: prevYear, month: prevMonth },
+              ],
+            },
+            select: { paidAt: true, year: true, month: true },
+          },
+          reminders: {
+            where: {
+              OR: [
+                { year, month },
+                { year: prevYear, month: prevMonth },
+              ],
+            },
+            select: {
+              sentAt: true,
+              year: true,
+              month: true,
+            },
+            orderBy: { sentAt: "desc" },
           },
         },
         orderBy: { id: "asc" },
@@ -67,7 +99,12 @@ export default async function TeacherPaymentsPage({
 
   const students = teacher?.Student ?? [];
   const rows = students.map((student) => {
-    const payment = student.payments[0] ?? null;
+    const payment = student.payments.find((entry) => entry.year === year && entry.month === month) ?? null;
+    const prevPayment =
+      student.payments.find((entry) => entry.year === prevYear && entry.month === prevMonth) ?? null;
+    const reminderCurrent =
+      student.reminders.find((entry) => entry.year === year && entry.month === month) ?? null;
+
     return {
       id: student.id,
       name: [student.user.firstName, student.user.lastName].filter(Boolean).join(" ").trim() || "Student",
@@ -75,21 +112,26 @@ export default async function TeacherPaymentsPage({
       fees: student.fees,
       paid: Boolean(payment),
       paidAt: payment?.paidAt ?? null,
+      prevPaid: Boolean(prevPayment),
+      lastReminderAt: reminderCurrent?.sentAt ?? null,
     };
   });
 
+  const expectedAmount = rows.reduce((sum, row) => sum + (row.fees ?? 0), 0);
+  const collectedAmount = rows.reduce((sum, row) => sum + (row.paid ? row.fees ?? 0 : 0), 0);
+  const outstandingAmount = expectedAmount - collectedAmount;
   const paidCount = rows.filter((row) => row.paid).length;
   const unpaidCount = rows.length - paidCount;
+  const overdueCount = rows.filter((row) => !row.prevPaid).length;
   const paidRatio = rows.length ? Math.round((paidCount / rows.length) * 100) : 0;
+  const followUpRows = rows.filter((row) => !row.paid || !row.prevPaid);
 
-  const current = new Date(year, month - 1, 1);
-  const prev = new Date(current.getFullYear(), current.getMonth() - 1, 1);
-  const next = new Date(current.getFullYear(), current.getMonth() + 1, 1);
   const monthLabel = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(current);
+  const previousMonthLabel = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(prev);
 
   return (
     <div className="space-y-4">
-        <Card className="border-primary/20">
+      <Card className="border-primary/20">
         <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle>Monthly Payments</CardTitle>
@@ -107,7 +149,7 @@ export default async function TeacherPaymentsPage({
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-3">
+        <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>Paid</CardDescription>
@@ -126,6 +168,57 @@ export default async function TeacherPaymentsPage({
               <CardTitle className="text-2xl">{paidRatio}%</CardTitle>
             </CardHeader>
           </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Collected</CardDescription>
+              <CardTitle className="text-2xl">{formatCurrency(collectedAmount)}</CardTitle>
+            </CardHeader>
+          </Card>
+          <Card>
+            <CardHeader className="pb-2">
+              <CardDescription>Outstanding</CardDescription>
+              <CardTitle className="text-2xl">{formatCurrency(outstandingAmount)}</CardTitle>
+            </CardHeader>
+          </Card>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Dues Follow-up</CardTitle>
+          <CardDescription>
+            Total expected: {formatCurrency(expectedAmount)}. {overdueCount} students are still unpaid for{" "}
+            {previousMonthLabel}.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {followUpRows.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Everyone is paid for current and previous month.</p>
+          ) : (
+            followUpRows.map((row) => {
+              const selectedMonthDue = row.paid ? 0 : 1;
+              const previousMonthDue = row.prevPaid ? 0 : 1;
+              const dueAmount = (row.fees ?? 0) * (selectedMonthDue + previousMonthDue);
+              const targetYear = row.paid ? prevYear : year;
+              const targetMonth = row.paid ? prevMonth : month;
+
+              return (
+                <div
+                  key={row.id}
+                  className="flex flex-col gap-2 rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between"
+                >
+                  <div>
+                    <p className="font-medium">{row.name}</p>
+                    <p className="text-sm text-muted-foreground">{row.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Due months: {selectedMonthDue + previousMonthDue} | Potential due: {formatCurrency(dueAmount)}
+                    </p>
+                  </div>
+                  <PaymentReminderButton studentId={row.id} year={targetYear} month={targetMonth} />
+                </div>
+              );
+            })
+          )}
         </CardContent>
       </Card>
 
@@ -153,6 +246,15 @@ export default async function TeacherPaymentsPage({
                       ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(row.paidAt)
                       : "-"}
                   </p>
+                  <p className="text-muted-foreground">
+                    Last reminder:{" "}
+                    {row.lastReminderAt
+                      ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(
+                          row.lastReminderAt
+                        )
+                      : "-"}
+                  </p>
+                  {!row.paid ? <PaymentReminderButton studentId={row.id} year={year} month={month} /> : null}
                 </CardContent>
               </Card>
             ))}
@@ -168,6 +270,8 @@ export default async function TeacherPaymentsPage({
                   <TableHead>Monthly Fees</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Paid At</TableHead>
+                  <TableHead>Last Reminder</TableHead>
+                  <TableHead>Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -187,11 +291,22 @@ export default async function TeacherPaymentsPage({
                           }).format(row.paidAt)
                         : "-"}
                     </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {row.lastReminderAt
+                        ? new Intl.DateTimeFormat("en-US", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }).format(row.lastReminderAt)
+                        : "-"}
+                    </TableCell>
+                    <TableCell>
+                      {!row.paid ? <PaymentReminderButton studentId={row.id} year={year} month={month} /> : "-"}
+                    </TableCell>
                   </TableRow>
                 ))}
                 {rows.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center text-muted-foreground">
                       No students found.
                     </TableCell>
                   </TableRow>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
     Table,
     TableHeader,
@@ -110,6 +111,9 @@ export default function TeacherStudentsTable({
                             <p><span className="text-muted-foreground">Fees:</span> {student.fees ?? "-"}</p>
                             <p><span className="text-muted-foreground">Classes/week:</span> {student.numOfClassesPerWeek ?? "-"}</p>
                             <div className="flex gap-2 pt-2">
+                                <Button size="sm" variant="secondary" asChild>
+                                    <Link href={`/teacher/progress?studentId=${student.id}`}>Progress</Link>
+                                </Button>
                                 <Button size="sm" variant="outline" onClick={() => handleEdit(student)}>
                                     Edit
                                 </Button>
@@ -148,6 +152,9 @@ export default function TeacherStudentsTable({
                                 <TableCell>{student.numOfClassesPerWeek}</TableCell>
                                 <TableCell>
                                     <div className="flex gap-2">
+                                        <Button size="sm" variant="secondary" asChild>
+                                            <Link href={`/teacher/progress?studentId=${student.id}`}>Progress</Link>
+                                        </Button>
                                         <Button size="sm" variant="outline" onClick={() => handleEdit(student)}>
                                             Edit
                                         </Button>

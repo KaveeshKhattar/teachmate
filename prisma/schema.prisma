@@ -28,6 +28,23 @@ enum WeekDay {
   SUN
 }
 
+enum ReminderChannel {
+  EMAIL
+  WHATSAPP
+  MANUAL
+}
+
+enum NotificationType {
+  SCHEDULE_CHANGE
+  PAYMENT
+  GENERAL
+}
+
+enum AssessmentSource {
+  TUITION
+  SCHOOL
+}
+
 model waitlist {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -71,6 +88,9 @@ model Student {
   assignments             SlotAssignment[]
   recurringDayAssignments RecurringDayAssignment[]
   payments                Payment[]
+  reminders               PaymentReminder[]
+  notifications           StudentNotification[]
+  assessments             Assessment[]
 }
 
 model Teacher {
@@ -84,6 +104,8 @@ model Teacher {
 
   slots              Slot[]
   recurringSchedules RecurringSchedule[]
+  paymentReminders   PaymentReminder[]
+  assessments        Assessment[]
 }
 
 model Slot {
@@ -188,10 +210,86 @@ model Payment {
   year  Int
 
   paidAt DateTime @default(now())
+  proofUrl  String?
+  proofNote String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([studentId, year, month])
   @@index([year, month])
+}
+
+model PaymentReminder {
+  id Int @id @default(autoincrement())
+
+  teacherId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  month Int
+  year  Int
+
+  channel ReminderChannel @default(EMAIL)
+  note    String?
+
+  sentAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([teacherId, year, month, sentAt])
+  @@index([studentId, year, month, sentAt])
+}
+
+model StudentNotification {
+  id Int @id @default(autoincrement())
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  type NotificationType @default(GENERAL)
+  title   String
+  message String
+
+  relatedDate DateTime?
+
+  readAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([studentId, createdAt])
+  @@index([studentId, readAt])
+}
+
+model Assessment {
+  id Int @id @default(autoincrement())
+
+  studentId Int
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  teacherId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  source AssessmentSource
+
+  subject String
+  title   String?
+
+  score    Float
+  maxScore Float
+
+  takenAt DateTime
+
+  notes String?
+
+  createdByRole UserRole
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId, takenAt])
+  @@index([teacherId, takenAt])
+  @@index([studentId, source, takenAt])
 }

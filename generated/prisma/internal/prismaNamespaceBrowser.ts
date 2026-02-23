@@ -61,7 +61,10 @@ export const ModelName = {
   RecurringDay: 'RecurringDay',
   RecurringException: 'RecurringException',
   RecurringDayAssignment: 'RecurringDayAssignment',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  PaymentReminder: 'PaymentReminder',
+  StudentNotification: 'StudentNotification',
+  Assessment: 'Assessment'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -204,11 +207,61 @@ export const PaymentScalarFieldEnum = {
   month: 'month',
   year: 'year',
   paidAt: 'paidAt',
+  proofUrl: 'proofUrl',
+  proofNote: 'proofNote',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const PaymentReminderScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  studentId: 'studentId',
+  month: 'month',
+  year: 'year',
+  channel: 'channel',
+  note: 'note',
+  sentAt: 'sentAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PaymentReminderScalarFieldEnum = (typeof PaymentReminderScalarFieldEnum)[keyof typeof PaymentReminderScalarFieldEnum]
+
+
+export const StudentNotificationScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  relatedDate: 'relatedDate',
+  readAt: 'readAt',
+  createdAt: 'createdAt'
+} as const
+
+export type StudentNotificationScalarFieldEnum = (typeof StudentNotificationScalarFieldEnum)[keyof typeof StudentNotificationScalarFieldEnum]
+
+
+export const AssessmentScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  teacherId: 'teacherId',
+  source: 'source',
+  subject: 'subject',
+  title: 'title',
+  score: 'score',
+  maxScore: 'maxScore',
+  takenAt: 'takenAt',
+  notes: 'notes',
+  createdByRole: 'createdByRole',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AssessmentScalarFieldEnum = (typeof AssessmentScalarFieldEnum)[keyof typeof AssessmentScalarFieldEnum]
 
 
 export const SortOrder = {
